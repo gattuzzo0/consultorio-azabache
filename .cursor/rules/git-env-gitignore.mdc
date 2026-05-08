@@ -1,0 +1,45 @@
+---
+description: .gitignore en la raíz — ignorar .env y variantes; plantillas .env.example; no versionar secretos
+alwaysApply: true
+---
+
+# Gitignore y archivos de entorno
+
+## Raíz del monorepo
+
+El archivo **`.gitignore` en la raíz del repo** debe evitar que **secretos** (`SUPABASE_SERVICE_ROLE_KEY`, claves R2, JWT, etc.) lleguen al historial de Git.
+
+### Patrones recomendados
+
+Incluir en la raíz (ajusta si el equipo usa otro nombre de plantilla):
+
+```
+# Entorno — no versionar valores reales
+.env
+**/.env
+.env.*
+!.env.example
+!**/.env.example
+.env.local
+**/.env.local
+```
+
+- **`.env`** y **`**/.env`**: ignoran `frontend/.env`, `backend/.env` y cualquier `.env` en subcarpetas.
+- **`.env.*`**: cubre `.env.local`, `.env.development`, etc.
+- **`!.env.example`** y **`!**/.env.example`**: permiten commitear **solo plantillas** sin secretos (raíz y por carpeta).
+- **`.env.local`**: redundante con `.env.*` pero deja explícito el caso típico de Vite/frontend.
+
+### Convención de trabajo
+
+- **`frontend/.env`** o **`backend/.env`**: solo como **plantilla** con variables vacías o valores no secretos; o bien **no existir en repo** y documentar en README / `.env.example`.
+- **Valores reales**: **`frontend/.env.local`** y **`backend/.env`** (o `.env.local`) en la máquina del desarrollador y en el dashboard del proveedor (Vercel, etc.), **nunca** en commits.
+
+### Si un `.env` ya fue commiteado antes de ignorarlo
+
+Añadir la regla en `.gitignore` **no lo saca** del historial. Hay que dejar de trackearlo (`git rm --cached …`) y rotar credenciales si ya se expusieron.
+
+## Qué debe hacer el agente
+
+1. Al tocar **`.gitignore`**, mantener coherencia con **`frontend/`** y **`backend/`**: secretos fuera del repo, plantillas sí si el equipo las versiona.
+2. **No commitear** archivos que contengan API keys, service role, ni secretos de JWT; usar variables de entorno del deploy.
+3. Si se crea una plantilla nueva, preferir **`.env.example`** con comentarios y sin valores sensibles.

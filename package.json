@@ -1,0 +1,15 @@
+{
+  "name": "consultorio-azabache",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Sitio web del Consultorio Médico Azabache (monorepo).",
+  "scripts": {
+    "prepare": "husky",
+    "eslint": "npm run eslint --prefix frontend",
+    "dev": "npm run dev --prefix frontend",
+    "build": "npm run build --prefix frontend"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}

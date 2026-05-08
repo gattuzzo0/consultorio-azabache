@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+:root {
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  /* Marca */
+  --brand-ink: #0b1220;
+  --brand-ink-soft: #111a2e;
+  --brand-ink-foreground: #ffffff;
+
+  /* Tokens base */
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --primary: #10b981;
+  --primary-hover: #059669;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f5f9;
+  --accent: #d1fae5;
+  --card: #ffffff;
+  --muted: #f8fafc;
+  --muted-strong: #f1f5f9;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --muted-foreground: #6b7280;
+  --foreground-soft: #475569;
+
+  --radius: 0.625rem;
+  --shadow-soft:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 8px 24px rgba(15, 23, 42, 0.06);
+  --shadow-card:
+    0 1px 2px rgba(15, 23, 42, 0.05),
+    0 4px 16px rgba(15, 23, 42, 0.05);
+}
+
+@theme {
+  --font-sans: var(--font-sans);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-card: var(--card);
+  --color-muted: var(--muted);
+  --color-muted-strong: var(--muted-strong);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-foreground-soft: var(--foreground-soft);
+
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-ink-soft: var(--brand-ink-soft);
+  --color-brand-ink-foreground: var(--brand-ink-foreground);
+
+  --radius-lg: var(--radius);
+  --shadow-soft: var(--shadow-soft);
+  --shadow-card: var(--shadow-card);
+}
+
+html {
+  font-family: var(--font-sans);
+  background: var(--background);
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--background);
+}
+
+#root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Logo y elementos de marca */
+.brand-wordmark {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+}
+
+.brand-wordmark .brand-eyebrow {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
+}
+
+/* Heading display: peso fuerte + tracking apretado al estilo del screenshot */
+.display-heading {
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+}
+
+/* Imagen del hero estilizada (placeholder visual coherente con el screenshot) */
+.hero-art {
+  background:
+    radial-gradient(
+      circle at 70% 38%,
+      rgba(16, 185, 129, 0.18) 0%,
+      transparent 52%
+    ),
+    linear-gradient(
+      135deg,
+      #1f3a4d 0%,
+      #0f2844 28%,
+      #001f3f 46%,
+      #0c1829 74%,
+      #0b1220 100%
+    );
+}
+
+.hero-logo-image {
+  filter: drop-shadow(0 18px 42px rgba(0, 0, 0, 0.38));
+}
+
+.hero-art-floor {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+}
+
+/* Avatares de doctora con iniciales (placeholder mientras no hay foto real) */
+.avatar-initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #fff;
+}

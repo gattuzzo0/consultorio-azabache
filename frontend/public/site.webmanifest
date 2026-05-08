@@ -1,0 +1,18 @@
+{
+  "name": "Consultorio Médico Azabache",
+  "short_name": "Azabache",
+  "description": "Atención médica general para toda la familia.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#0b1220",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    }
+  ]
+}
