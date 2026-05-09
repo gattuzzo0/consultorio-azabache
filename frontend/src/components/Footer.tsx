@@ -48,7 +48,7 @@ export function Footer() {
             <ul className="mt-4 space-y-2.5 text-sm">
               <li className="flex items-start gap-2">
                 <MapPin size={16} className="mt-0.5 shrink-0 text-white/60" />
-                <span className="text-white/70">Azabache 555, C.P. 76399</span>
+                <span className="text-white/70">Azabache 1016, C.P. 78399</span>
               </li>
               {/* Teléfono fijo — desactivado temporalmente
               <li className="flex items-start gap-2">
