@@ -9,16 +9,27 @@ Configuración estándar del proyecto. Pareja con `git-eslint-precommit.mdc` (Hu
 
 ## `frontend/vite.config.ts`
 
+Usar **`cacheDir`** fuera del árbol del repo (p. ej. `path.join(os.tmpdir(), "vite-cache-<proyecto>-frontend")`) cuando el proyecto viva bajo **OneDrive** u otra carpeta sincronizada en Windows: evita **`EPERM: operation not permitted, rmdir ... node_modules\.vite\deps`** al regenerar dependencias preempaquetadas.
+
+Ejemplo alineado con este repo:
+
 ```ts
+import path from "node:path";
+import os from "node:os";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
+const cacheDir = path.join(
+  os.tmpdir(),
+  "vite-cache-consultorio-azabache-frontend",
+);
+
 export default defineConfig({
+  cacheDir,
   plugins: [react(), tailwindcss()],
   server: {
     port: 5173,
-    /** Si 5173 está ocupado, fallar con mensaje claro en vez de cambiar a 5174 silenciosamente. */
     strictPort: true,
     proxy: {
       "/api": {
@@ -39,6 +50,13 @@ Reglas:
 - **`strictPort: true`** en dev y preview: si los puertos están ocupados, mejor fallar que mover los servicios sin avisar.
 - **`appType: "spa"`** evita comportamientos raros del fallback de Vite.
 - Si la app se sirve bajo subruta en producción (p. ej. `/tienda/`), añadir `base: "/tienda/"` en `defineConfig`.
+
+### Errores habituales en desarrollo
+
+| Síntoma | Qué hacer |
+| --- | --- |
+| **`Port 5173 is already in use`** | Otro `vite` sigue vivo (otra terminal o proceso). Cerrar con **Ctrl+C** en esa terminal o terminar el proceso Node que escucha `5173` (`netstat -ano` → `taskkill /PID …`). No relajar `strictPort` sin consenso: oculta conflictos. |
+| **`EPERM` … `node_modules\.vite`** | Proyecto en OneDrive/antivirus bloqueando la carpeta: usar **`cacheDir`** como arriba; borrar manualmente `node_modules\.vite` si quedó corrupto; pausar sincronización OneDrive un momento si sigue fallando. |
 
 ## `frontend/tsconfig.json`
 
@@ -197,3 +215,5 @@ dist
 - ❌ Apagar `strict` o `noUnusedLocals` para pasar el build.
 - ❌ Eslint en formato legacy `.eslintrc.json` con plugins manuales — usar flat config.
 - ❌ Saltarse el hook con `git commit --no-verify` salvo emergencia documentada.
+- ❌ Dejar `cacheDir` por defecto en proyectos bajo **OneDrive** en Windows si aparece **EPERM** al borrar `node_modules/.vite` — mover la caché a `%TEMP%` (ver arriba).
+- ❌ Pasar `strictPort: false` solo para “solucionar” **puerto ocupado** sin cerrar el otro proceso Vite.

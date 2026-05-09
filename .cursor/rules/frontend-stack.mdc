@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Frontend: stack y estructura
 
-Stack base obligatorio para nuevas SPAs en este monorepo. Es lo que usa este proyecto y lo que asumen las demás reglas (`frontend-styling`, `frontend-auth-routing`, `frontend-api-client`, `frontend-tooling`, `frontend-whatsapp-deep-links`).
+Stack base obligatorio para nuevas SPAs en este monorepo. Es lo que usa este proyecto y lo que asumen las demás reglas (`frontend-styling`, `frontend-auth-routing`, `frontend-api-client`, `frontend-tooling`, `frontend-whatsapp-deep-links`, `frontend-maps-embed`).
 
 ## Stack
 
@@ -93,6 +93,10 @@ Reglas:
 - Tipos compartidos exportados desde `lib/<dominio>Types.ts` (ej.: `posSaleTypes.ts`).
 - Idioma de UI: español (`<html lang="es">` en `index.html`).
 
+## Mapas (solo ubicación)
+
+- Para **un pin / una dirección**, usar **iframe OpenStreetMap** (`export/embed.html`, bbox + `marker`), sin nuevas dependencias npm — ver **`frontend-maps-embed.mdc`**.
+
 ## Enlaces WhatsApp
 
 - Usar **`openWhatsApp`** desde **`src/lib/openWhatsApp.ts`** y el patrón `href` + `onClick` + `preventDefault` descrito en **`frontend-whatsapp-deep-links.mdc`**. No usar solo `wa.me` con `target="_blank"` como único comportamiento para enlaces que deban abrir la app nativa sin abandonar la SPA.
@@ -104,6 +108,7 @@ Reglas:
 
 ## Antipatrones
 
+- ❌ **Leaflet / Google Maps JS** solo para mostrar una ubicación fija — usar embed OSM según **`frontend-maps-embed.mdc`**.
 - ❌ Enlaces WhatsApp solo con `href="https://wa.me/..."` y `target="_blank"` sin `openWhatsApp` — ver **`frontend-whatsapp-deep-links.mdc`**.
 - ❌ No usar `create-react-app`, `REACT_APP_*` ni `setupProxy.js` — esto es **Vite**.
 - ❌ No mezclar Pages Router de Next ni similares; este stack es SPA pura.

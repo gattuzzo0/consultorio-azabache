@@ -1,0 +1,50 @@
+---
+description: Mapas en el frontend sin SDK ni API keys — iframe OpenStreetMap (bbox + marker) frente a Leaflet/Google JS
+alwaysApply: true
+---
+
+# Frontend: mapa embebido (OpenStreetMap)
+
+Para una **sola ubicación** (consultorio, tienda, punto de encuentro), **no** añadir **`leaflet`**, **`react-leaflet`** ni **Google Maps JavaScript API** salvo requisito explícito (rutas complejas, dibujo, muchas capas). Esas dependencias inflan el bundle y en iframes de Google el zoom táctil en móvil suele ser problemático sin API key.
+
+## Opción por defecto: iframe oficial de OSM
+
+Usar el embed de OpenStreetMap:
+
+- URL base: `https://www.openstreetmap.org/export/embed.html`
+- **`bbox`** = `minLon,minLat,maxLon,maxLat` (oeste-sur-este-norte en grados decimales).
+- **`layer=mapnik`**
+- **`marker=LAT,LNG`** (latitud primero, longitud después; oeste en negativo).
+
+Construir el bbox centrado en el negocio con constantes claras en la página o en `lib`:
+
+- `SHOP_LAT`, `SHOP_LNG` — coordenadas del pin (sustituir por las reales).
+- `MAP_BBOX_LON_SPAN`, `MAP_BBOX_LAT_SPAN` — anchura/alura del rectángulo en grados (valores mayores = mapa más alejado).
+- `MAP_ZOOM_FACTOR` — multiplica ambos spans (`> 1` aleja el encuadre, `< 1` lo acerca).
+
+Ejemplo de composición:
+
+```txt
+halfLon = (MAP_BBOX_LON_SPAN * MAP_ZOOM_FACTOR) / 2
+halfLat = (MAP_BBOX_LAT_SPAN * MAP_ZOOM_FACTOR) / 2
+bbox = (SHOP_LNG - halfLon), (SHOP_LAT - halfLat), (SHOP_LNG + halfLon), (SHOP_LAT + halfLat)
+src = .../export/embed.html?bbox=<bbox>&layer=mapnik&marker=<SHOP_LAT>,<SHOP_LNG>
+```
+
+Enlace **“Abrir en Google Maps”** sin SDK:  
+`https://www.google.com/maps/search/?api=1&query=LAT,LNG` con `target="_blank"` y `rel="noopener noreferrer"`.
+
+## Accesibilidad y maquetación del iframe
+
+- `title` descriptivo en español (obligatorio para iframes).
+- `loading="lazy"`, `referrerPolicy="no-referrer-when-downgrade"`.
+- Contenedor con **aspect-ratio** (p. ej. 16/10), **altura mínima responsive**, borde y sombra acordes a tokens del proyecto (`border-border`, `shadow-[var(--shadow-soft)]`, `rounded-[var(--radius)]`).
+
+## Cuándo sí considerar otra solución
+
+- Mapas **editables**, **geocodificación en cliente**, **clusters**, **GeoJSON** pesado → valorar Leaflet u otra librería **solo** tras decisión explícita y consciente del tamaño del bundle.
+
+## Antipatrones
+
+- ❌ Añadir Leaflet para un único pin estático “porque el iframe no hace zoom”: primero probar **bbox + spans** del embed OSM y el enlace a Google Maps.
+- ❌ Meter **API keys de Google Maps** en el frontend para un mapa estático sin necesidad real.

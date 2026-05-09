@@ -23,6 +23,7 @@ Al crear una app full-stack nueva (p. ej. "app para vender pizzas"), usa este la
 - **Frontend (Vite)**: variables de entorno con prefijo **`VITE_*`** (p. ej. `VITE_BACKEND_URL`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`). Se acceden con `import.meta.env.VITE_*`. Si la app se sirve bajo subruta, configurar `base` en `vite.config.ts`.
 - **Backend**: `.env` en `backend/` cargado con `python-dotenv` desde la carpeta del servidor; rutas API bajo prefijo `/api`.
 - **Proxy local**: bloque `server.proxy` en `frontend/vite.config.ts` enrutando `/api` → `http://127.0.0.1:8000` durante desarrollo (no hace falta `setupProxy.js`, eso es de CRA).
+- **Vite y OneDrive (Windows)**: si falla el dev server con **EPERM** sobre `node_modules/.vite`, usar **`cacheDir`** apuntando a `%TEMP%` u otra carpeta fuera de la sincronización — detalle en **`frontend-tooling.mdc`**.
 - **README raíz**: debe listar stack, estructura de carpetas, variables de entorno necesarias y comandos para backend + frontend.
 
 ## Notas
