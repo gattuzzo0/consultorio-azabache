@@ -1,27 +1,23 @@
 import { useMemo, useState } from "react";
-import {
-  Alert,
-  Button,
-  CircularProgress,
-  TextField,
-} from "@mui/material";
+import { Alert, Button, TextField } from "@mui/material";
 import { Check, Home as HomeIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { StepIndicator, type Step } from "../components/StepIndicator";
 import { Calendar } from "../components/Calendar";
 import { TimeSlots } from "../components/TimeSlots";
 import { DoctorAvatar } from "../components/DoctorCard";
+import { WhatsAppIcon } from "../components/WhatsAppIcon";
 import { DOCTORS, findDoctor } from "../lib/doctors";
+import {
+  buildConsultAvailabilityMessage,
+  getDoctorWhatsAppDigits,
+} from "../lib/doctorWhatsApp";
 import {
   formatLongDateES,
   startOfMonth,
   toIsoLocalDate,
 } from "../lib/format";
-import {
-  AppointmentsApiHttpError,
-  createAppointment,
-  type AppointmentRecord,
-} from "../lib/appointmentsApi";
+import { openWhatsApp } from "../lib/openWhatsApp";
 
 const STEPS: Step[] = [
   { id: 1, label: "Selecciona doctora" },
@@ -33,15 +29,22 @@ const STEPS: Step[] = [
 
 const TIME_SLOTS = ["09:00 AM", "10:30 AM", "12:00 PM", "04:00 PM"];
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_RE = /^[\d\s+()-]{7,}$/;
 
 type FormErrors = {
   patientName?: string;
   patientPhone?: string;
-  patientEmail?: string;
   reason?: string;
   general?: string;
+};
+
+type WhatsAppCompletion = {
+  doctorName: string;
+  date: string;
+  time: string;
+  patientName: string;
+  patientPhone: string;
+  reason: string;
 };
 
 export function AgendarCita() {
@@ -54,12 +57,10 @@ export function AgendarCita() {
 
   const [patientName, setPatientName] = useState("");
   const [patientPhone, setPatientPhone] = useState("");
-  const [patientEmail, setPatientEmail] = useState("");
   const [reason, setReason] = useState("");
 
   const [errors, setErrors] = useState<FormErrors>({});
-  const [submitting, setSubmitting] = useState(false);
-  const [confirmation, setConfirmation] = useState<AppointmentRecord | null>(
+  const [completion, setCompletion] = useState<WhatsAppCompletion | null>(
     null,
   );
 
@@ -67,18 +68,18 @@ export function AgendarCita() {
     if (!doctorId) return 1;
     if (!selectedDate) return 2;
     if (!selectedSlot) return 3;
-    if (!confirmation) return 4;
+    if (!completion) return 4;
     return 5;
-  }, [doctorId, selectedDate, selectedSlot, confirmation]);
+  }, [doctorId, selectedDate, selectedSlot, completion]);
 
   const completedSteps = useMemo(() => {
     const completed: number[] = [];
     if (doctorId) completed.push(1);
     if (selectedDate) completed.push(2);
     if (selectedSlot) completed.push(3);
-    if (confirmation) completed.push(4, 5);
+    if (completion) completed.push(4, 5);
     return completed;
-  }, [doctorId, selectedDate, selectedSlot, confirmation]);
+  }, [doctorId, selectedDate, selectedSlot, completion]);
 
   function validate(): FormErrors {
     const e: FormErrors = {};
@@ -88,16 +89,13 @@ export function AgendarCita() {
     if (!PHONE_RE.test(patientPhone.trim())) {
       e.patientPhone = "Ingresa un teléfono válido.";
     }
-    if (!EMAIL_RE.test(patientEmail.trim())) {
-      e.patientEmail = "Ingresa un correo electrónico válido.";
-    }
     if (!reason.trim() || reason.trim().length < 4) {
       e.reason = "Cuéntanos brevemente el motivo de tu consulta.";
     }
     return e;
   }
 
-  async function handleSubmit(ev: React.FormEvent) {
+  function handleSubmit(ev: React.FormEvent) {
     ev.preventDefault();
     if (!doctorId || !selectedDate || !selectedSlot) {
       setErrors({
@@ -111,37 +109,47 @@ export function AgendarCita() {
       setErrors(e);
       return;
     }
-    setErrors({});
-    setSubmitting(true);
-    try {
-      const record = await createAppointment({
-        doctorId,
-        date: toIsoLocalDate(selectedDate),
-        time: selectedSlot,
-        patientName: patientName.trim(),
-        patientPhone: patientPhone.trim(),
-        patientEmail: patientEmail.trim(),
-        reason: reason.trim(),
+
+    const waDigits = getDoctorWhatsAppDigits(doctorId);
+    if (!waDigits) {
+      setErrors({
+        general:
+          "No hay número de WhatsApp para esta doctora. Configura VITE_GLORIA_WHATSAPP, VITE_LIDIA_WHATSAPP y VITE_CAROLINA_WHATSAPP en el entorno del frontend.",
       });
-      setConfirmation(record);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } catch (err) {
-      const message =
-        err instanceof AppointmentsApiHttpError
-          ? err.message
-          : err instanceof Error
-            ? err.message
-            : "No se pudo crear la cita.";
-      setErrors({ general: message });
-    } finally {
-      setSubmitting(false);
+      return;
     }
+
+    const doctor = findDoctor(doctorId);
+    if (!doctor) return;
+
+    const message = buildConsultAvailabilityMessage({
+      patientName: patientName.trim(),
+      patientPhone: patientPhone.trim(),
+      reason: reason.trim(),
+      doctorShortName: doctor.shortName,
+      dateLabel: formatLongDateES(selectedDate),
+      time: selectedSlot,
+    });
+
+    const waLink = `https://wa.me/${waDigits}?text=${encodeURIComponent(message)}`;
+    openWhatsApp(waLink);
+
+    setCompletion({
+      doctorName: doctor.shortName,
+      date: toIsoLocalDate(selectedDate),
+      time: selectedSlot,
+      patientName: patientName.trim(),
+      patientPhone: patientPhone.trim(),
+      reason: reason.trim(),
+    });
+    setErrors({});
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  if (confirmation) {
+  if (completion) {
     return (
       <ConfirmationView
-        record={confirmation}
+        completion={completion}
         steps={STEPS}
         currentStep={5}
         completedSteps={completedSteps}
@@ -259,7 +267,7 @@ export function AgendarCita() {
               4. Tus datos
             </h2>
 
-            <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
               <TextField
                 label="Nombre completo"
                 placeholder="Ingresa tu nombre"
@@ -278,17 +286,6 @@ export function AgendarCita() {
                 error={Boolean(errors.patientPhone)}
                 helperText={errors.patientPhone}
                 inputMode="tel"
-                fullWidth
-                size="medium"
-              />
-              <TextField
-                label="Correo electrónico"
-                placeholder="Ingresa tu correo"
-                value={patientEmail}
-                onChange={(e) => setPatientEmail(e.target.value)}
-                error={Boolean(errors.patientEmail)}
-                helperText={errors.patientEmail}
-                type="email"
                 fullWidth
                 size="medium"
               />
@@ -334,7 +331,7 @@ export function AgendarCita() {
                     .
                   </>
                 ) : (
-                  "Completa todos los pasos para confirmar tu cita."
+                  "Completa todos los pasos para consultar disponibilidad por WhatsApp."
                 )}
               </div>
               <Button
@@ -342,16 +339,9 @@ export function AgendarCita() {
                 variant="contained"
                 color="primary"
                 size="large"
-                disabled={submitting}
-                startIcon={
-                  submitting ? (
-                    <CircularProgress size={16} color="inherit" />
-                  ) : (
-                    <Check size={16} />
-                  )
-                }
+                startIcon={<WhatsAppIcon size={18} />}
               >
-                {submitting ? "Enviando..." : "Confirmar cita"}
+                Consultar disponibilidad
               </Button>
             </div>
           </div>
@@ -362,19 +352,19 @@ export function AgendarCita() {
 }
 
 type ConfirmationViewProps = {
-  record: AppointmentRecord;
+  completion: WhatsAppCompletion;
   steps: Step[];
   currentStep: number;
   completedSteps: number[];
 };
 
 function ConfirmationView({
-  record,
+  completion,
   steps,
   currentStep,
   completedSteps,
 }: ConfirmationViewProps) {
-  const date = new Date(`${record.date}T00:00:00`);
+  const date = new Date(`${completion.date}T00:00:00`);
   return (
     <section className="bg-muted py-8 sm:py-12">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -394,19 +384,25 @@ function ConfirmationView({
 
         <div className="mx-auto max-w-2xl rounded-2xl border border-border bg-card p-8 text-center shadow-card">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-accent text-primary">
-            <Check size={32} strokeWidth={2.5} />
+            <WhatsAppIcon size={36} />
           </div>
           <h2 className="mt-5 text-2xl font-bold text-foreground">
-            ¡Cita agendada con éxito!
+            Mensaje listo en WhatsApp
           </h2>
           <p className="mt-2 text-sm text-foreground-soft">
-            Hemos enviado los detalles a tu correo electrónico.
+            Se abrió WhatsApp con tu nombre, teléfono, motivo de consulta y la
+            preferencia de fecha y hora. Envía el mensaje para coordinar la
+            cita con el consultorio.
+          </p>
+          <p className="mt-3 text-xs text-muted-foreground">
+            Si no ves WhatsApp, permite ventanas emergentes o revisa que la app
+            esté instalada.
           </p>
 
           <dl className="mx-auto mt-8 grid max-w-md grid-cols-1 gap-y-3 rounded-xl border border-border bg-muted px-6 py-5 text-left text-sm sm:grid-cols-3">
             <dt className="text-muted-foreground">Doctora</dt>
             <dd className="font-medium text-foreground sm:col-span-2">
-              {record.doctorName}
+              {completion.doctorName}
             </dd>
 
             <dt className="text-muted-foreground">Fecha</dt>
@@ -416,12 +412,22 @@ function ConfirmationView({
 
             <dt className="text-muted-foreground">Hora</dt>
             <dd className="font-medium text-foreground sm:col-span-2">
-              {record.time}
+              {completion.time}
             </dd>
 
             <dt className="text-muted-foreground">Paciente</dt>
             <dd className="font-medium text-foreground sm:col-span-2">
-              {record.patientName}
+              {completion.patientName}
+            </dd>
+
+            <dt className="text-muted-foreground">Teléfono</dt>
+            <dd className="font-medium text-foreground sm:col-span-2">
+              {completion.patientPhone}
+            </dd>
+
+            <dt className="text-muted-foreground">Motivo</dt>
+            <dd className="font-medium text-foreground sm:col-span-2">
+              {completion.reason}
             </dd>
           </dl>
 

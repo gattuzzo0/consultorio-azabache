@@ -1,0 +1,46 @@
+---
+description: Enlaces WhatsApp (wa.me) — abrir app nativa sin navegar la SPA; usar openWhatsApp desde lib/
+alwaysApply: true
+---
+
+# Frontend: enlaces WhatsApp (`wa.me`)
+
+## Objetivo
+
+Al enlazar a **WhatsApp** desde la SPA, **no** usar solo `<a href="https://wa.me/…" target="_blank">` como única acción: eso navega o abre pestaña y **no prioriza** el protocolo `whatsapp://` ni el comportamiento que el SO espera (sobre todo **iOS**, donde la apertura de apps suele exigir un gesto de usuario síncrono).
+
+## Implementación obligatoria en este monorepo
+
+1. **Helper único:** `frontend/src/lib/openWhatsApp.ts`
+   - **`openWhatsApp(waLink: string): boolean`** — parsea `wa.me` / `api.whatsapp.com`, construye `whatsapp://send?phone=<dígitos>&text=<encoded>`.
+   - **iOS:** `window.location.href = deepLink` en respuesta directa al clic (Safari / PWA).
+   - **Android / escritorio:** `iframe` oculto con `src = deepLink` ~1 s, sin sustituir la `location` del documento.
+   - **Fallback (~2,3 s):** si no hubo señal de éxito (`blur` / visibilidad), `window.open(wa.me, '_blank')`.
+   - **Parseo fallido:** `window.open(waLink, '_blank')`.
+
+2. **Patrón en JSX** (mantener `href` por accesibilidad y clic derecho):
+
+```tsx
+<a
+  href={WHATSAPP_URL}
+  className="cursor-pointer ..."
+  onClick={(e) => {
+    e.preventDefault();
+    openWhatsApp(WHATSAPP_URL);
+  }}
+>
+  Texto visible
+</a>
+```
+
+3. **Constantes:** definir `const WHATSAPP_URL = "https://wa.me/…"` (con `?text=` si hace falta mensaje prellenado) junto al componente o en `lib/` si se comparte.
+
+## Qué debe hacer el agente
+
+- En **nuevos** enlaces a WhatsApp en `frontend/src`, **importar** `openWhatsApp` y el patrón `preventDefault` + `href` preservado.
+- **No** añadir dependencias npm para esto; el módulo actual solo usa APIs del navegador.
+- Si el proyecto aún no tiene `openWhatsApp.ts`, **reutilizar el mismo enfoque** (mismo archivo y misma API) en lugar de reinventar enlaces planos.
+
+## Referencia
+
+Detalle de plataformas y pruebas manuales descritos en comentarios de **`frontend/src/lib/openWhatsApp.ts`**.

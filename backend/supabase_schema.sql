@@ -18,7 +18,7 @@ create table if not exists public.appointments (
     appointment_time_label text not null,
     patient_name text not null,
     patient_phone text not null,
-    patient_email text not null,
+    patient_email text not null default '', -- puede ser cadena vacía si el paciente no proporciona correo
     reason text not null,
     status text not null default 'pendiente',
     created_at timestamptz not null default now(),

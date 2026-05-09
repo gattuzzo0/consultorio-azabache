@@ -45,7 +45,11 @@ class AppointmentCreate(BaseModel):
     appointment_time: str = Field(alias="time", min_length=1, max_length=16)
     patient_name: str = Field(alias="patientName", min_length=3, max_length=120)
     patient_phone: str = Field(alias="patientPhone", min_length=7, max_length=40)
-    patient_email: str = Field(alias="patientEmail", min_length=5, max_length=200)
+    patient_email: str = Field(
+        default="",
+        alias="patientEmail",
+        max_length=200,
+    )
     reason: str = Field(min_length=4, max_length=2000)
 
     @field_validator("doctor_id")
@@ -88,6 +92,9 @@ class AppointmentCreate(BaseModel):
     @field_validator("patient_email")
     @classmethod
     def email_ok(cls, v: str) -> str:
+        v = v.strip().lower()
+        if not v:
+            return ""
         if not _EMAIL_RE.match(v):
             raise ValueError("Correo electrónico inválido")
         return v
@@ -170,7 +177,7 @@ async def create_appointment(body: AppointmentCreate) -> AppointmentOut:
         "appointment_time_label": body.appointment_time,
         "patient_name": body.patient_name.strip(),
         "patient_phone": body.patient_phone.strip(),
-        "patient_email": body.patient_email.strip().lower(),
+        "patient_email": body.patient_email,
         "reason": body.reason.strip(),
         "status": "pendiente",
     }

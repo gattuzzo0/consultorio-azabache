@@ -59,7 +59,8 @@ export type CreateAppointmentBody = {
   time: string; // HH:mm
   patientName: string;
   patientPhone: string;
-  patientEmail: string;
+  /** Opcional; si no hay correo se envía cadena vacía. */
+  patientEmail?: string;
   reason: string;
 };
 

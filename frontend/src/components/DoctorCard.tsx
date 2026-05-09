@@ -14,6 +14,28 @@ export function DoctorAvatar({
   className,
 }: DoctorAvatarProps) {
   const radius = rounded === "full" ? "9999px" : "12px";
+  const objectPosition = doctor.photoObjectPosition ?? "center 30%";
+
+  if (doctor.photoSrc) {
+    return (
+      <img
+        src={doctor.photoSrc}
+        alt=""
+        width={size}
+        height={size}
+        className={["shrink-0 object-cover", className].filter(Boolean).join(" ")}
+        style={{
+          width: size,
+          height: size,
+          borderRadius: radius,
+          objectPosition,
+        }}
+        loading="lazy"
+        decoding="async"
+      />
+    );
+  }
+
   return (
     <div
       className={["avatar-initials", className].filter(Boolean).join(" ")}
@@ -51,17 +73,30 @@ export function DoctorCard({ doctor, variant = "full" }: DoctorCardProps) {
     );
   }
 
+  const objectPosition = doctor.photoObjectPosition ?? "center 25%";
+
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card">
-      <div className="aspect-[4/3] w-full bg-muted-strong">
-        <div
-          className="flex h-full w-full items-center justify-center"
-          style={{ background: doctor.avatarBg }}
-        >
-          <span className="text-5xl font-bold tracking-wide text-white/95">
-            {doctor.initials}
-          </span>
-        </div>
+      <div className="aspect-[4/3] w-full overflow-hidden bg-muted-strong">
+        {doctor.photoSrc ? (
+          <img
+            src={doctor.photoSrc}
+            alt={`Retrato de ${doctor.shortName}`}
+            className="h-full w-full object-cover"
+            style={{ objectPosition }}
+            loading="lazy"
+            decoding="async"
+          />
+        ) : (
+          <div
+            className="flex h-full w-full items-center justify-center"
+            style={{ background: doctor.avatarBg }}
+          >
+            <span className="text-5xl font-bold tracking-wide text-white/95">
+              {doctor.initials}
+            </span>
+          </div>
+        )}
       </div>
       <div className="flex flex-1 flex-col p-5">
         <h3 className="text-base font-semibold leading-snug text-foreground">

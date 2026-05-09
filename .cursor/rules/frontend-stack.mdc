@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Frontend: stack y estructura
 
-Stack base obligatorio para nuevas SPAs en este monorepo. Es lo que usa este proyecto y lo que asumen las demás reglas (`frontend-styling`, `frontend-auth-routing`, `frontend-api-client`, `frontend-tooling`).
+Stack base obligatorio para nuevas SPAs en este monorepo. Es lo que usa este proyecto y lo que asumen las demás reglas (`frontend-styling`, `frontend-auth-routing`, `frontend-api-client`, `frontend-tooling`, `frontend-whatsapp-deep-links`).
 
 ## Stack
 
@@ -32,7 +32,7 @@ frontend/
 │   ├── assets/             # imágenes del bundle (png/svg/webp)
 │   ├── components/         # presentacionales y de layout (Header, Footer, ShopLayout, ErrorBoundary, RequireXAccess, etc.)
 │   ├── context/            # React Context providers (AuthContext, CartContext, etc.)
-│   ├── lib/                # clientes y helpers reutilizables (supabase.ts, muiTheme.ts, posApi.ts, tipos)
+│   ├── lib/                # clientes y helpers (supabase.ts, muiTheme.ts, openWhatsApp.ts, posApi.ts, tipos)
 │   ├── pages/              # vistas conectadas a rutas (Home, Login, etc.)
 │   └── styles/             # CSS extra si index.css se queda corto
 ├── index.html              # lang="es", manifest, apple-touch-icon, theme-color, fuentes Google
@@ -93,6 +93,10 @@ Reglas:
 - Tipos compartidos exportados desde `lib/<dominio>Types.ts` (ej.: `posSaleTypes.ts`).
 - Idioma de UI: español (`<html lang="es">` en `index.html`).
 
+## Enlaces WhatsApp
+
+- Usar **`openWhatsApp`** desde **`src/lib/openWhatsApp.ts`** y el patrón `href` + `onClick` + `preventDefault` descrito en **`frontend-whatsapp-deep-links.mdc`**. No usar solo `wa.me` con `target="_blank"` como único comportamiento para enlaces que deban abrir la app nativa sin abandonar la SPA.
+
 ## Iconos / PWA
 
 - Mantener `public/favicon.svg`, `public/apple-touch-icon.png` (180×180), `public/icon-192.png`, `public/icon-512.png` y `public/site.webmanifest` sincronizados con la marca. Detalle en `web-app-icons.mdc`.
@@ -100,6 +104,7 @@ Reglas:
 
 ## Antipatrones
 
+- ❌ Enlaces WhatsApp solo con `href="https://wa.me/..."` y `target="_blank"` sin `openWhatsApp` — ver **`frontend-whatsapp-deep-links.mdc`**.
 - ❌ No usar `create-react-app`, `REACT_APP_*` ni `setupProxy.js` — esto es **Vite**.
 - ❌ No mezclar Pages Router de Next ni similares; este stack es SPA pura.
 - ❌ No poner lógica de fetch en componentes de página directamente — pasarla por `lib/` (ver `frontend-api-client.mdc`).

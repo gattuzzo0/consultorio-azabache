@@ -6,7 +6,11 @@ export type Doctor = {
   specialty: string;
   description: string;
   license: string;
-  /** Color de fondo del avatar de iniciales (placeholder mientras no haya foto). */
+  /** Archivo en `public/` (servido como `/nombre.ext`). */
+  photoSrc: string;
+  /** `object-position` CSS para encuadrar el rostro en el recorte. */
+  photoObjectPosition?: string;
+  /** Fallback compacto si no hay imagen (no usado cuando hay `photoSrc`). */
   avatarBg: string;
 };
 
@@ -15,33 +19,39 @@ export const DOCTORS: Doctor[] = [
     id: "gloria-vazquez",
     name: "Dra. Gloria Vázquez Vázquez",
     shortName: "Dra. Gloria Vázquez Vázquez",
-    initials: "ML",
+    initials: "GV",
     specialty: "Médico General",
     description:
       "Atención integral para adultos, control de enfermedades crónicas y seguimiento preventivo.",
     license: "9876543",
+    photoSrc: "/doctor-gloria-vazquez.png",
+    photoObjectPosition: "center 22%",
     avatarBg: "linear-gradient(135deg, #c9a6a4 0%, #a87b78 100%)",
   },
   {
     id: "lidia-rodriguez",
     name: "Dra. Lidia Rodriguez Vázquez",
     shortName: "Dra. Lidia Rodriguez Vázquez",
-    initials: "CT",
+    initials: "LR",
     specialty: "Médico General",
     description:
       "Consulta médica general, valoración inicial, orientación familiar y seguimiento de tratamientos.",
     license: "8765432",
+    photoSrc: "/doctor-lidia-rodriguez.png",
+    photoObjectPosition: "center 25%",
     avatarBg: "linear-gradient(135deg, #b9a08f 0%, #87664f 100%)",
   },
   {
     id: "carolina-vazquez",
     name: "Dra. Carolina Vázquez Montes",
     shortName: "Dra. Carolina Vázquez Montes",
-    initials: "SM",
+    initials: "CV",
     specialty: "Médico General",
     description:
       "Enfoque preventivo, revisión general, diagnóstico oportuno y acompañamiento cercano del paciente.",
     license: "7654321",
+    photoSrc: "/doctor-carolina-vazquez.jpg",
+    photoObjectPosition: "center 28%",
     avatarBg: "linear-gradient(135deg, #d4a373 0%, #9b6b3f 100%)",
   },
 ];

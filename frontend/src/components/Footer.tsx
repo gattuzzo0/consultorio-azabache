@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 import { Wordmark } from "./Logo";
-import { MapPin, Phone, MessageCircle } from "lucide-react";
+import { MapPin, MessageCircle } from "lucide-react";
+import { openWhatsApp } from "../lib/openWhatsApp";
+
+const FOOTER_WHATSAPP_HREF = "https://wa.me/5214443161743";
 
 export function Footer() {
   return (
@@ -47,6 +50,7 @@ export function Footer() {
                 <MapPin size={16} className="mt-0.5 shrink-0 text-white/60" />
                 <span className="text-white/70">Azabache 555, C.P. 76399</span>
               </li>
+              {/* Teléfono fijo — desactivado temporalmente
               <li className="flex items-start gap-2">
                 <Phone size={16} className="mt-0.5 shrink-0 text-white/60" />
                 <a
@@ -56,18 +60,21 @@ export function Footer() {
                   444 123 4567
                 </a>
               </li>
+              */}
               <li className="flex items-start gap-2">
                 <MessageCircle
                   size={16}
                   className="mt-0.5 shrink-0 text-white/60"
                 />
                 <a
-                  href="https://wa.me/5214449876543"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white/70 hover:text-white"
+                  href={FOOTER_WHATSAPP_HREF}
+                  className="cursor-pointer text-white/70 hover:text-white"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    openWhatsApp(FOOTER_WHATSAPP_HREF);
+                  }}
                 >
-                  444 987 6543
+                  444 316 1743
                 </a>
               </li>
             </ul>
@@ -84,7 +91,7 @@ export function Footer() {
         </div>
 
         <div className="mt-10 border-t border-white/10 pt-6 text-xs text-white/50">
-          Este establecimiento no es una clínica, sino un consultorio médico.
+          Este.
           <br className="hidden sm:inline" />
           Para emergencias, acude al servicio médico más cercano.
         </div>

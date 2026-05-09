@@ -3,10 +3,11 @@ import {
   MapPin,
   MessageCircle,
   Navigation,
-  Phone,
 } from "lucide-react";
+import { openWhatsApp } from "../lib/openWhatsApp";
 
 const ADDRESS = "Azabache 555, C.P. 76399";
+const UBICACION_WHATSAPP_HREF = "https://wa.me/5214449876543";
 const MAPS_DIRECTIONS_URL = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
   ADDRESS,
 )}`;
@@ -62,6 +63,7 @@ export function Ubicacion() {
             </h2>
 
             <ul className="mt-5 space-y-5">
+              {/* Teléfono fijo — desactivado temporalmente
               <li className="flex items-start gap-3">
                 <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent text-primary">
                   <Phone size={16} />
@@ -78,6 +80,7 @@ export function Ubicacion() {
                   </a>
                 </div>
               </li>
+              */}
               <li className="flex items-start gap-3">
                 <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent text-primary">
                   <MessageCircle size={16} />
@@ -87,12 +90,14 @@ export function Ubicacion() {
                     WhatsApp
                   </p>
                   <a
-                    href="https://wa.me/5214449876543"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-base font-semibold text-foreground"
+                    href={UBICACION_WHATSAPP_HREF}
+                    className="cursor-pointer text-base font-semibold text-foreground"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      openWhatsApp(UBICACION_WHATSAPP_HREF);
+                    }}
                   >
-                    444 987 6543
+                    444 316 1743
                   </a>
                 </div>
               </li>
