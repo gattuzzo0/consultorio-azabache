@@ -45,6 +45,7 @@ export default defineConfig({
 
 Reglas:
 
+- Si **vite.config.ts** importa módulos Node (`node:path`, `node:os`, etc.), incluir **`@types/node`** en `devDependencies` del frontend; sin eso, `tsc -b` falla con *Cannot find module 'node:...'*.
 - **`@tailwindcss/vite`** activa Tailwind v4 sin `tailwind.config.js`.
 - **`server.proxy["/api"]`** evita problemas de CORS en desarrollo: el frontend habla con su propio origen y Vite reenvía al backend.
 - **`strictPort: true`** en dev y preview: si los puertos están ocupados, mejor fallar que mover los servicios sin avisar.
