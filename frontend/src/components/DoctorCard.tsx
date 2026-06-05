@@ -56,9 +56,15 @@ export function DoctorAvatar({
 type DoctorCardProps = {
   doctor: Doctor;
   variant?: "full" | "compact";
+  /** Variante visual para fondos oscuros (glassmorphism en inicio). */
+  appearance?: "default" | "premium-dark";
 };
 
-export function DoctorCard({ doctor, variant = "full" }: DoctorCardProps) {
+export function DoctorCard({
+  doctor,
+  variant = "full",
+  appearance = "default",
+}: DoctorCardProps) {
   if (variant === "compact") {
     return (
       <div className="flex items-center gap-3 rounded-lg border border-border bg-card p-3 shadow-soft">
@@ -74,10 +80,23 @@ export function DoctorCard({ doctor, variant = "full" }: DoctorCardProps) {
   }
 
   const objectPosition = doctor.photoObjectPosition ?? "center 25%";
+  const isPremiumDark = appearance === "premium-dark";
 
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card">
-      <div className="aspect-[4/3] w-full overflow-hidden bg-muted-strong">
+    <article
+      className={
+        isPremiumDark
+          ? "doctor-card-premium flex h-full flex-col overflow-hidden rounded-xl"
+          : "flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card"
+      }
+    >
+      <div
+        className={
+          isPremiumDark
+            ? "doctor-card-premium__media aspect-[4/3] w-full overflow-hidden"
+            : "aspect-[4/3] w-full overflow-hidden bg-muted-strong"
+        }
+      >
         {doctor.photoSrc ? (
           <img
             src={doctor.photoSrc}
@@ -99,16 +118,40 @@ export function DoctorCard({ doctor, variant = "full" }: DoctorCardProps) {
         )}
       </div>
       <div className="flex flex-1 flex-col p-5">
-        <h3 className="text-base font-semibold leading-snug text-foreground">
+        <h3
+          className={
+            isPremiumDark
+              ? "doctor-card-premium__name text-base font-semibold leading-snug"
+              : "text-base font-semibold leading-snug text-foreground"
+          }
+        >
           {doctor.shortName}
         </h3>
-        <p className="mt-0.5 text-sm text-muted-foreground">
+        <p
+          className={
+            isPremiumDark
+              ? "doctor-card-premium__specialty mt-0.5 text-sm"
+              : "mt-0.5 text-sm text-muted-foreground"
+          }
+        >
           {doctor.specialty}
         </p>
-        <p className="mt-3 text-sm leading-relaxed text-foreground-soft">
+        <p
+          className={
+            isPremiumDark
+              ? "doctor-card-premium__bio mt-3 text-sm leading-relaxed"
+              : "mt-3 text-sm leading-relaxed text-foreground-soft"
+          }
+        >
           {doctor.description}
         </p>
-        <p className="mt-4 border-t border-border pt-3 text-xs text-muted-foreground">
+        <p
+          className={
+            isPremiumDark
+              ? "doctor-card-premium__license mt-4 border-t pt-3 text-xs"
+              : "mt-4 border-t border-border pt-3 text-xs text-muted-foreground"
+          }
+        >
           Cédula profesional: {doctor.license}
         </p>
       </div>

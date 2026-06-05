@@ -1,5 +1,5 @@
 -- =============================================================================
--- Esquema Supabase: Consultorio Médico Azabache
+-- Esquema Supabase: Laboratorio médico y salud ocupacional Azabache
 -- Aplicar manualmente desde el SQL Editor de Supabase.
 -- Las tablas no se auto-crean desde el código.
 -- =============================================================================

@@ -31,6 +31,14 @@
   --shadow-card:
     0 1px 2px rgba(15, 23, 42, 0.05),
     0 4px 16px rgba(15, 23, 42, 0.05);
+
+  --hero-bg: #121212;
+  --premium-bg: #121212;
+  --premium-surface: #1a1a1a;
+  --premium-text: #f5f5f5;
+  --premium-text-muted: #a3a3a3;
+  --premium-accent: #e8945a;
+  --premium-accent-glow: rgba(212, 109, 49, 0.14);
 }
 
 @theme {
@@ -54,6 +62,7 @@
   --color-brand-ink: var(--brand-ink);
   --color-brand-ink-soft: var(--brand-ink-soft);
   --color-brand-ink-foreground: var(--brand-ink-foreground);
+  --color-hero: var(--hero-bg);
 
   --radius-lg: var(--radius);
   --shadow-soft: var(--shadow-soft);
@@ -103,34 +112,145 @@ body {
   line-height: 1.05;
 }
 
-/* Imagen del hero estilizada (placeholder visual coherente con el screenshot) */
-.hero-art {
-  background:
-    radial-gradient(
-      circle at 70% 38%,
-      rgba(16, 185, 129, 0.18) 0%,
-      transparent 52%
-    ),
-    linear-gradient(
-      135deg,
-      #1f3a4d 0%,
-      #0f2844 28%,
-      #001f3f 46%,
-      #0c1829 74%,
-      #0b1220 100%
-    );
+/* Superficie oscura continua (Hero → equipo → servicios en inicio) */
+.home-dark-surface {
+  background: var(--premium-bg);
+  color: var(--premium-text);
 }
 
-.hero-logo-image {
-  filter: drop-shadow(0 18px 42px rgba(0, 0, 0, 0.38));
+/* Hero premium: fondo carbón, naranja solo como acento luminoso */
+.hero-section {
+  position: relative;
+  background: transparent;
 }
 
-.hero-art-floor {
+.hero-gradient-text {
+  font-weight: 800;
+  letter-spacing: -0.02em;
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.04) 0%,
-    rgba(255, 255, 255, 0.12) 100%
+    #f0c090 0%,
+    #e8945a 42%,
+    #d46d31 100%
   );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 20px rgba(212, 109, 49, 0.22));
+}
+
+.hero-visual-wrap {
+  position: relative;
+}
+
+.hero-visual-wrap__glow {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  z-index: 0;
+  width: 88%;
+  height: 72%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(212, 109, 49, 0.18) 0%,
+    rgba(230, 126, 34, 0.06) 42%,
+    transparent 72%
+  );
+  filter: blur(28px);
+  pointer-events: none;
+}
+
+.hero-btn-primary {
+  background: linear-gradient(180deg, #1f8a75 0%, #166d5d 100%);
+}
+
+.hero-btn-outline {
+  border-color: #d46d31;
+  color: #e8945a;
+}
+
+.hero-learn-more {
+  color: #e8945a;
+}
+
+.hero-visual {
+  display: block;
+  height: auto;
+}
+
+/* Tarjeta glass del hero */
+.hero-glass-card {
+  position: relative;
+  z-index: 1;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0.02) 55%,
+    rgba(0, 0, 0, 0.12) 100%
+  );
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.45),
+    0 0 80px rgba(212, 109, 49, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+}
+
+.hero-glass-card__shine {
+  background: linear-gradient(
+    125deg,
+    rgba(255, 255, 255, 0.14) 0%,
+    rgba(255, 255, 255, 0.04) 28%,
+    transparent 52%
+  );
+}
+
+.hero-glass-card__logo {
+  background: transparent;
+}
+
+.hero-molecule {
+  animation: hero-mol-float 9s ease-in-out infinite;
+  filter: drop-shadow(0 0 6px rgba(230, 126, 34, 0.65));
+}
+
+.hero-molecule--2 {
+  animation-duration: 11s;
+}
+
+.hero-molecule--3 {
+  animation-duration: 10s;
+}
+
+.hero-molecule--4 {
+  animation-duration: 12s;
+}
+
+.hero-molecule--5 {
+  animation-duration: 13s;
+}
+
+.hero-molecule--6 {
+  animation-duration: 8s;
+}
+
+@keyframes hero-mol-float {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate(5px, -7px) rotate(6deg);
+  }
+  66% {
+    transform: translate(-4px, 5px) rotate(-5deg);
+  }
+}
+
+.font-serif {
+  font-family: Georgia, "Times New Roman", "Liberation Serif", serif;
 }
 
 /* Avatares de doctora con iniciales (placeholder mientras no hay foto real) */
@@ -141,4 +261,145 @@ body {
   font-weight: 700;
   letter-spacing: 0.02em;
   color: #fff;
+}
+
+@keyframes servicio-overlay-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes servicio-card-expand {
+  from {
+    opacity: 0;
+    transform: scale(0.88) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.servicio-overlay-backdrop {
+  animation: servicio-overlay-fade-in 220ms ease-out both;
+}
+
+.servicio-overlay-card {
+  animation: servicio-card-expand 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Sección equipo: resplandor ambiental bajo las tarjetas */
+.team-section {
+  position: relative;
+}
+
+.team-section__ambient {
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  z-index: 0;
+  width: min(960px, 92%);
+  height: 320px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(212, 109, 49, 0.14) 0%,
+    rgba(230, 126, 34, 0.05) 45%,
+    transparent 72%
+  );
+  filter: blur(36px);
+  pointer-events: none;
+}
+
+.team-section__inner {
+  position: relative;
+  z-index: 1;
+}
+
+.team-section__heading {
+  color: var(--premium-text);
+  letter-spacing: -0.02em;
+}
+
+.team-section__subheading {
+  color: rgba(245, 245, 245, 0.55);
+}
+
+/* Tarjetas del equipo — glassmorphism sobre fondo oscuro */
+.doctor-card-premium {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.07) 0%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.35),
+    0 0 48px rgba(212, 109, 49, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(14px);
+  transition:
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    transform 220ms ease;
+}
+
+.doctor-card-premium:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    0 0 64px rgba(212, 109, 49, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+}
+
+.doctor-card-premium__media {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.doctor-card-premium__name {
+  color: #f5f5f5;
+}
+
+.doctor-card-premium__specialty {
+  color: #d4d4d4;
+}
+
+.doctor-card-premium__bio {
+  color: rgba(245, 245, 245, 0.72);
+}
+
+.doctor-card-premium__license {
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #a3a3a3;
+}
+
+/* ---------------------------------------------------------------------------
+ * Particles band — fondo oscuro continuo, red de partículas casi imperceptible
+ * ---------------------------------------------------------------------------
+ */
+.particles-band {
+  position: relative;
+  background: transparent;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.particles-band__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.particles-band > :not(.particles-band__canvas) {
+  position: relative;
+  z-index: 1;
 }

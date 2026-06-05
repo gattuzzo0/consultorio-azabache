@@ -2,14 +2,14 @@
 export function getDoctorWhatsAppDigits(doctorId: string): string {
   let raw = "";
   switch (doctorId) {
+    case "miriam-de-la-rosa":
+      raw = import.meta.env.VITE_MIRIAM_WHATSAPP ?? "";
+      break;
     case "gloria-vazquez":
       raw = import.meta.env.VITE_GLORIA_WHATSAPP ?? "";
       break;
-    case "lidia-rodriguez":
-      raw = import.meta.env.VITE_LIDIA_WHATSAPP ?? "";
-      break;
-    case "carolina-vazquez":
-      raw = import.meta.env.VITE_CAROLINA_WHATSAPP ?? "";
+    case "sandra-orta":
+      raw = import.meta.env.VITE_SANDRA_WHATSAPP ?? "";
       break;
     default:
       break;

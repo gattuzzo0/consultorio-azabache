@@ -6,18 +6,14 @@ import {
   Navigation,
 } from "lucide-react";
 import {
+  SHOP_LAT,
+  SHOP_LNG,
   UBICACION_ADDRESS,
+  UBICACION_GOOGLE_MAPS_URL,
   ubicacionDirectionsUrl,
 } from "../lib/ubicacion";
+import { HORARIO_LABORAL } from "../lib/horarios";
 import { openWhatsApp } from "../lib/openWhatsApp";
-
-// -----------------------------------------------------------------------------
-// Mapa (OpenStreetMap embed): coordenadas del negocio — sustituir por las reales.
-// -----------------------------------------------------------------------------
-/** Latitud (decimal norte). Sustituir si el pin debe moverse. */
-const SHOP_LAT = 22.13706;
-/** Longitud (decimal oeste: valor negativo). */
-const SHOP_LNG = -100.9446;
 
 /** Ancho del encuadre en grados de longitud (bbox). Valores mayores = más alejado. */
 const MAP_BBOX_LON_SPAN = 0.0048;
@@ -40,7 +36,7 @@ function buildOsmEmbedSrc(): string {
   return `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${SHOP_LAT},${SHOP_LNG}`;
 }
 
-const GOOGLE_MAPS_SEARCH_URL = `https://www.google.com/maps/search/?api=1&query=${SHOP_LAT},${SHOP_LNG}`;
+const GOOGLE_MAPS_SEARCH_URL = UBICACION_GOOGLE_MAPS_URL;
 
 function formatCoordsShort(): string {
   return `${SHOP_LAT.toFixed(5)}°, ${SHOP_LNG.toFixed(5)}°`;
@@ -161,7 +157,7 @@ export function Ubicacion() {
                       openWhatsApp(UBICACION_WHATSAPP_HREF);
                     }}
                   >
-                    444 316 1743
+                    444 567 6565
                   </a>
                 </div>
               </li>
@@ -173,12 +169,19 @@ export function Ubicacion() {
                   <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                     Horario
                   </p>
-                  <p className="text-base font-semibold text-foreground">
-                    Lunes a sábado
-                  </p>
-                  <p className="text-sm text-foreground-soft">
-                    8:00 AM a 7:00 PM
-                  </p>
+                  <ul className="mt-1 space-y-1">
+                    {HORARIO_LABORAL.map(({ day, hours }) => (
+                      <li
+                        key={day}
+                        className="flex justify-between gap-4 text-sm"
+                      >
+                        <span className="font-medium text-foreground">
+                          {day}
+                        </span>
+                        <span className="text-foreground-soft">{hours}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </li>
             </ul>

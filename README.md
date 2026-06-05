@@ -1,6 +1,6 @@
-# Consultorio Médico Azabache
+# Laboratorio médico y salud ocupacional Azabache
 
-Sitio web del Consultorio Médico Azabache: información del consultorio, doctoras, ubicación y agenda en línea de citas.
+Sitio web del Laboratorio médico y salud ocupacional Azabache: información del consultorio, doctoras, ubicación y agenda en línea de citas.
 
 ## Stack
 

@@ -5,21 +5,28 @@ import { Wordmark } from "./Logo";
 
 const NAV_LINKS = [
   { to: "/", label: "Inicio", end: true },
-  { to: "/doctoras", label: "Doctoras" },
+  { to: "/doctoras", label: "Equipo" },
+  { to: "/salud-ocupacional", label: "Salud ocupacional" },
   { to: "/ubicacion", label: "Ubicación" },
 ];
 
 export function Header() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
+  const isHome = location.pathname === "/";
 
   return (
-    <header className="bg-brand-ink text-white">
+    <header
+      className={[
+        "text-white",
+        isHome ? "bg-hero" : "bg-brand-ink",
+      ].join(" ")}
+    >
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:h-[72px] lg:px-8">
         <Link
           to="/"
           className="flex shrink-0 items-center"
-          aria-label="Consultorio Médico Azabache - Inicio"
+          aria-label="Laboratorio médico y salud ocupacional Azabache - Inicio"
           onClick={() => setOpen(false)}
         >
           <Wordmark variant="light" />
@@ -48,7 +55,7 @@ export function Header() {
           ))}
           <Link
             to="/agendar"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-[var(--primary-hover)] focus:outline-none focus:ring-2 focus:ring-primary/40 focus:ring-offset-2 focus:ring-offset-[#0b1220]"
+            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-[var(--primary-hover)] focus:outline-none focus:ring-2 focus:ring-primary/40 focus:ring-offset-2 focus:ring-offset-[#1a1e23]"
           >
             Agendar cita
           </Link>
@@ -68,7 +75,10 @@ export function Header() {
       {open && (
         <nav
           aria-label="Navegación móvil"
-          className="border-t border-white/5 bg-brand-ink md:hidden"
+          className={[
+            "border-t border-white/5 md:hidden",
+            isHome ? "bg-hero" : "bg-brand-ink",
+          ].join(" ")}
         >
           <ul className="flex flex-col gap-1 p-4">
             {NAV_LINKS.map((link) => {
