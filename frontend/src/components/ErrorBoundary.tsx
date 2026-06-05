@@ -17,15 +17,25 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.error) {
       const title = this.props.title ?? "Algo salió mal";
+      const showDetails = import.meta.env.DEV;
       return (
         <div className="mx-auto w-full max-w-3xl p-6">
           <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-red-900">
             <h1 className="text-lg font-semibold">{title}</h1>
-            <p className="mt-2 text-sm">{this.state.error.message}</p>
-            {this.state.error.stack && (
-              <pre className="mt-3 max-h-64 overflow-auto whitespace-pre-wrap text-xs text-red-800/80">
-                {this.state.error.stack}
-              </pre>
+            {showDetails ? (
+              <>
+                <p className="mt-2 text-sm">{this.state.error.message}</p>
+                {this.state.error.stack && (
+                  <pre className="mt-3 max-h-64 overflow-auto whitespace-pre-wrap text-xs text-red-800/80">
+                    {this.state.error.stack}
+                  </pre>
+                )}
+              </>
+            ) : (
+              <p className="mt-2 text-sm">
+                Vuelve a intentar en unos momentos o recarga la página. Si el
+                problema continúa, contacta al consultorio.
+              </p>
             )}
           </div>
         </div>
