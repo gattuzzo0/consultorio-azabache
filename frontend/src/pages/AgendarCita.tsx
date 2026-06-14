@@ -427,7 +427,7 @@ function ConfirmationView({
           <div className="mt-8 flex justify-center">
             <Link
               to="/"
-              className="inline-flex items-center gap-2 rounded-md bg-foreground px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#1f2937]"
+              className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-[var(--primary-hover)]"
             >
               <HomeIcon size={16} />
               Volver al inicio

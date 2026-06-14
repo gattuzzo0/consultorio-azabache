@@ -3,5 +3,10 @@
   "installCommand": "npm install --prefix frontend",
   "buildCommand": "npm run build --prefix frontend",
   "outputDirectory": "frontend/dist",
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [
+    {
+      "source": "/((?!assets/|.*\\.(?:png|svg|jpg|jpeg|webp|ico|webmanifest|json|txt|xml)$).*)",
+      "destination": "/index.html"
+    }
+  ]
 }

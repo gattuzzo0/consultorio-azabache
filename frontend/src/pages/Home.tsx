@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, MapPin } from "lucide-react";
-import { DoctorCard } from "../components/DoctorCard";
 import { HeroGlassCard } from "../components/HeroGlassCard";
+import { PaquetesCarousel } from "../components/PaquetesCarousel";
 import { ParticlesBand } from "../components/ParticlesBand";
 import { ServiciosSection } from "../components/ServiciosSection";
-import { DOCTORS } from "../lib/doctors";
+import { SaludOcupacionalTeaser } from "../components/SaludOcupacionalTeaser";
 
 export function Home() {
   return (
@@ -56,28 +56,11 @@ export function Home() {
       </section>
 
       <ParticlesBand>
-        <section
-          id="doctoras"
-          className="team-section py-16 sm:py-20 lg:py-24"
-          aria-labelledby="doctoras-heading"
-        >
-          <div className="team-section__ambient" aria-hidden />
-          <div className="team-section__inner mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-            <h2
-              id="doctoras-heading"
-              className="team-section__heading text-center text-3xl font-bold tracking-tight sm:text-4xl"
-            >
-              Nuestro equipo
-            </h2>
-            <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-7">
-              {DOCTORS.map((d) => (
-                <DoctorCard key={d.id} doctor={d} appearance="premium-dark" />
-              ))}
-            </div>
-          </div>
-        </section>
+        <PaquetesCarousel />
 
         <ServiciosSection />
+
+        <SaludOcupacionalTeaser />
       </ParticlesBand>
     </div>
   );

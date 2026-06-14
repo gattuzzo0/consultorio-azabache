@@ -5,7 +5,6 @@ import { azabacheTheme } from "./lib/muiTheme";
 import { PublicLayout } from "./components/PublicLayout";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { Home } from "./pages/Home";
-import { Doctoras } from "./pages/Doctoras";
 import { SaludOcupacional } from "./pages/SaludOcupacional";
 import { Ubicacion } from "./pages/Ubicacion";
 import { AgendarCita } from "./pages/AgendarCita";
@@ -19,7 +18,6 @@ export default function App() {
         <Routes>
           <Route element={<PublicLayout />}>
             <Route index element={<Home />} />
-            <Route path="doctoras" element={<Doctoras />} />
             <Route path="salud-ocupacional" element={<SaludOcupacional />} />
             <Route path="ubicacion" element={<Ubicacion />} />
             <Route

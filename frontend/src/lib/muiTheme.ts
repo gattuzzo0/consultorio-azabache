@@ -3,12 +3,12 @@ import { createTheme } from "@mui/material/styles";
 export const azabacheTheme = createTheme({
   palette: {
     mode: "light",
-    primary: { main: "#10b981", dark: "#059669", contrastText: "#ffffff" },
+    primary: { main: "#f1732d", dark: "#d45f1f", contrastText: "#ffffff" },
     secondary: { main: "#0b1220", contrastText: "#ffffff" },
     background: { default: "#ffffff", paper: "#ffffff" },
     text: { primary: "#0f172a", secondary: "#475569" },
     divider: "#e5e7eb",
-    success: { main: "#10b981" },
+    success: { main: "#22c55e" },
     error: { main: "#ef4444" },
   },
   shape: { borderRadius: 10 },
