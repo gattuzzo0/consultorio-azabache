@@ -8,14 +8,14 @@
   --brand-ink-soft: #111a2e;
   --brand-ink-foreground: #ffffff;
 
-  /* Tokens base */
+  /* Tokens base — naranja ROGA (#F1732D) */
   --background: #ffffff;
   --foreground: #0f172a;
-  --primary: #10b981;
-  --primary-hover: #059669;
+  --primary: #f1732d;
+  --primary-hover: #d45f1f;
   --primary-foreground: #ffffff;
   --secondary: #f1f5f9;
-  --accent: #d1fae5;
+  --accent: #fde8d8;
   --card: #ffffff;
   --muted: #f8fafc;
   --muted-strong: #f1f5f9;
@@ -163,7 +163,7 @@ body {
 }
 
 .hero-btn-primary {
-  background: linear-gradient(180deg, #1f8a75 0%, #166d5d 100%);
+  background: linear-gradient(180deg, var(--primary) 0%, var(--primary-hover) 100%);
 }
 
 .hero-btn-outline {
@@ -327,6 +327,204 @@ body {
 
 .team-section__subheading {
   color: rgba(245, 245, 245, 0.55);
+}
+
+/* Sección paquetes promocionales — carrusel */
+.paquetes-section {
+  position: relative;
+}
+
+.paquetes-section__ambient {
+  position: absolute;
+  left: 50%;
+  top: 55%;
+  z-index: 0;
+  width: min(960px, 92%);
+  height: 360px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(241, 115, 45, 0.12) 0%,
+    rgba(212, 109, 49, 0.06) 45%,
+    transparent 72%
+  );
+  filter: blur(36px);
+  pointer-events: none;
+}
+
+.paquetes-section__inner {
+  position: relative;
+  z-index: 1;
+}
+
+.paquetes-section__heading {
+  color: var(--premium-text);
+  letter-spacing: -0.02em;
+}
+
+.salud-ocupacional-teaser {
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.07) 0%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.2),
+    0 12px 40px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(12px);
+}
+
+.paquetes-carousel {
+  position: relative;
+}
+
+.paquetes-carousel__viewport {
+  position: relative;
+  min-height: 420px;
+}
+
+@media (min-width: 768px) {
+  .paquetes-carousel__viewport {
+    min-height: 320px;
+  }
+}
+
+.paquete-slide {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 1.25rem;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  padding: 1.25rem;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.2),
+    0 12px 40px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(12px);
+  transition:
+    opacity 500ms ease,
+    transform 500ms ease;
+}
+
+@media (min-width: 768px) {
+  .paquete-slide {
+    grid-template-columns: minmax(240px, 42%) 1fr;
+    align-items: center;
+    gap: 2rem;
+    padding: 1.75rem 2rem;
+  }
+}
+
+.paquete-slide--active {
+  position: relative;
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.paquete-slide--hidden {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateX(12px);
+  pointer-events: none;
+}
+
+.paquete-slide__image-wrap {
+  overflow: hidden;
+  border-radius: 1rem;
+  aspect-ratio: 4 / 3;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.paquete-slide__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.paquete-slide__title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--premium-text);
+}
+
+.paquete-slide__list {
+  margin: 1rem 0 0;
+  padding-left: 1.25rem;
+  color: rgba(245, 245, 245, 0.82);
+  line-height: 1.65;
+}
+
+.paquete-slide__list li + li {
+  margin-top: 0.35rem;
+}
+
+.paquete-slide__price {
+  margin: 1.25rem 0 0;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--primary);
+}
+
+.paquetes-carousel__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.paquetes-carousel__nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--premium-text);
+  transition: background 150ms ease;
+}
+
+.paquetes-carousel__nav:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.paquetes-carousel__dots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  max-width: 20rem;
+}
+
+.paquetes-carousel__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border: none;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.25);
+  padding: 0;
+  cursor: pointer;
+  transition:
+    width 200ms ease,
+    background 200ms ease;
+}
+
+.paquetes-carousel__dot--active {
+  width: 1.5rem;
+  background: var(--primary);
 }
 
 /* Tarjetas del equipo — glassmorphism sobre fondo oscuro */

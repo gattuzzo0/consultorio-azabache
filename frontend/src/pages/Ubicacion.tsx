@@ -108,7 +108,7 @@ export function Ubicacion() {
                   href={MAPS_DIRECTIONS_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex shrink-0 items-center justify-center gap-2 rounded-md bg-foreground px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#1f2937]"
+                  className="inline-flex shrink-0 items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-[var(--primary-hover)]"
                 >
                   <Navigation size={15} />
                   Cómo llegar
