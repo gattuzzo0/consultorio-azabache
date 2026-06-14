@@ -1,6 +1,6 @@
 {
   "name": "ROGA Laboratorio médico y salud ocupacional",
-  "short_name": "Azabache",
+  "short_name": "ROGA",
   "description": "Atención médica general para toda la familia.",
   "start_url": "/",
   "scope": "/",
@@ -9,10 +9,22 @@
   "background_color": "#ffffff",
   "icons": [
     {
-      "src": "/favicon.svg",
-      "type": "image/svg+xml",
-      "sizes": "any",
+      "src": "/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
       "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
     }
   ]
 }

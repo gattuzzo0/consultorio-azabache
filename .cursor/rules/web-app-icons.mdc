@@ -1,29 +1,150 @@
 ---
-description: Iconos PWA — iOS (apple-touch-icon PNG), Android/manifest (site.webmanifest + icon-192/512); el favicon SVG no basta para pantalla de inicio
+description: Iconos PWA — iOS (apple-touch-icon PNG), Android/manifest (icon-192/512), regeneración, deploy y rewrites SPA
 alwaysApply: true
 ---
 
 # Iconos de web app (iOS, Android, escritorio)
 
-## iOS / iPadOS (Safari)
+## Regla de oro
 
-Al **Añadir a pantalla de inicio**, Safari **no usa** `rel="icon"` con **SVG** como icono del acceso.
+**`favicon.svg` solo sirve para la pestaña del navegador.** No basta para “Añadir a pantalla de inicio” ni “Instalar app”. Hay que versionar PNG en `frontend/public/` y enlazarlos en `index.html` + `site.webmanifest`.
 
-- **`frontend/public/apple-touch-icon.png`** — PNG **180×180** px (rasterizar desde `favicon.svg` si cambia la marca).
-- En **`frontend/index.html`**: `rel="apple-touch-icon"` y opcional `apple-mobile-web-app-title`.
+| Plataforma | Fuente del icono | Archivo |
+| --- | --- | --- |
+| Pestaña / favicon | SVG | `frontend/public/favicon.svg` |
+| iOS / iPadOS (Safari) | PNG 180×180 | `frontend/public/apple-touch-icon.png` |
+| Android / Chrome / Edge | PNG vía manifiesto | `icon-192.png`, `icon-512.png` |
 
-## Android y navegadores con manifiesto (Chrome, Edge, etc.)
+Safari en iOS **ignora** `rel="icon"` con SVG al crear el acceso en pantalla de inicio.
 
-El icono al **instalar** o **añadir a inicio** sale del **manifiesto web**, no de `apple-touch-icon`.
+---
 
-- **`frontend/public/site.webmanifest`** — `name`, `short_name`, `start_url`, `scope`, `display`, `theme_color`, `background_color`, array **`icons`** con PNG.
-- **`frontend/public/icon-192.png`** y **`frontend/public/icon-512.png`** — tamaños habituales para `purpose: "any"`; el **512** también puede declararse como **`maskable`** (mismo archivo si el diseño tiene margen seguro).
-- En **`frontend/index.html`**: `<link rel="manifest" href="/site.webmanifest" />`.
+## Archivos obligatorios en `frontend/public/`
 
-## Si se actualiza `favicon.svg`
+```
+frontend/public/
+├── favicon.svg
+├── apple-touch-icon.png    # 180×180
+├── icon-192.png            # 192×192
+├── icon-512.png            # 512×512 (margen seguro ~10 % para maskable)
+└── site.webmanifest
+```
 
-Regenerar **`apple-touch-icon.png`**, **`icon-192.png`** e **`icon-512.png`** para que todo coincida (misma fuente SVG).
+Los PNG **deben commitearse** en Git. Si solo existen en local o sin deploy, el icono sale roto o genérico en producción.
 
-## Nota para usuarios
+---
 
-Tras desplegar, a veces hace falta **quitar el acceso antiguo** de la pantalla de inicio y **volver a añadir** el sitio (caché de iconos).
+## `frontend/index.html`
+
+Incluir siempre:
+
+```html
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+<link rel="manifest" href="/site.webmanifest" />
+<meta name="theme-color" content="#0b1220" />
+<meta name="apple-mobile-web-app-title" content="ROGA" />
+```
+
+- `apple-touch-icon` → **solo iOS** (Android no lo usa).
+- `apple-mobile-web-app-title` → nombre bajo el icono en iOS.
+
+---
+
+## `frontend/public/site.webmanifest`
+
+Android y Chrome leen **`icons`** del manifiesto, no `apple-touch-icon`.
+
+Plantilla mínima (ajustar `name` / `short_name` si cambia la marca):
+
+```json
+{
+  "name": "ROGA Laboratorio médico y salud ocupacional",
+  "short_name": "ROGA",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#0b1220",
+  "background_color": "#ffffff",
+  "icons": [
+    { "src": "/icon-192.png", "type": "image/png", "sizes": "192x192", "purpose": "any" },
+    { "src": "/icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "any" },
+    { "src": "/icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "maskable" }
+  ]
+}
+```
+
+- **`purpose: "any"`** — icono normal.
+- **`purpose: "maskable"`** — Android recorta en círculo/cuadrado redondeado; el 512 debe tener margen.
+
+---
+
+## Regenerar PNG al cambiar `favicon.svg`
+
+Desde la raíz del repo (requiere Python + Pillow):
+
+```bash
+python frontend/scripts/generate_web_icons.py
+```
+
+El script rasteriza el PNG embebido en `favicon.svg`, centra sobre fondo blanco y escribe los tres PNG en `frontend/public/`. Tras regenerar: **commit** de los PNG + redeploy.
+
+Si `favicon.svg` deja de llevar PNG embebido, adaptar el script o exportar manualmente 180 / 192 / 512.
+
+---
+
+## Deploy (Vercel) y rewrites SPA
+
+Los iconos viven en **`public/`** → Vite los copia a `dist/` en build. Deben servirse como estáticos, **no** como `index.html`.
+
+En `vercel.json` (raíz del monorepo) el rewrite SPA **no debe capturar** extensiones estáticas:
+
+```json
+"rewrites": [
+  {
+    "source": "/((?!assets/|.*\\.(?:png|svg|jpg|jpeg|webp|ico|webmanifest|json|txt|xml)$).*)",
+    "destination": "/index.html"
+  }
+]
+```
+
+Comprobación post-deploy:
+
+- `GET /apple-touch-icon.png` → 200, `Content-Type: image/png`
+- `GET /site.webmanifest` → 200 JSON con array `icons` apuntando a PNG
+- `GET /icon-192.png`, `/icon-512.png` → 200
+
+---
+
+## Imágenes promocionales vs iconos PWA
+
+- **Iconos PWA** → `frontend/public/` (rutas fijas `/icon-*.png`).
+- **Assets del bundle** (p. ej. carrusel) → `frontend/src/assets/` + `import` en TS para que Vite los empaquete en `dist/assets/`. No confundir con iconos de instalación.
+
+---
+
+## Protección de previews (Vercel)
+
+Con **Deployment Protection** en previews, `site.webmanifest` puede responder **401** en el navegador. Es esperado hasta desactivar protección en previews o usar sesión Vercel. En **Production** debe ser 200.
+
+---
+
+## QA manual
+
+| Acción | iOS (Safari) | Android (Chrome) |
+| --- | --- | --- |
+| Añadir a inicio | Compartir → “Añadir a pantalla de inicio” | Menú → “Instalar app” / “Añadir a pantalla de inicio” |
+| Icono esperado | Logo ROGA (PNG) | Logo ROGA (PNG del manifiesto) |
+| Nombre esperado | `apple-mobile-web-app-title` o `short_name` | `short_name` del manifiesto |
+
+Tras cambiar iconos en producción: **quitar el acceso antiguo** de la pantalla de inicio y **volver a añadir** (caché agresiva de iconos en iOS y Android).
+
+---
+
+## Antipatrones
+
+- ❌ Solo `favicon.svg` + manifiesto con `"type": "image/svg+xml"` — iOS y muchos installs fallan.
+- ❌ PNG generados pero **sin commit** — preview/prod sin icono.
+- ❌ Rewrite SPA `"/(.*)" → /index.html` sin excluir `.png` / `.webmanifest` — icono roto (HTML en lugar de imagen).
+- ❌ Olvidar regenerar PNG tras actualizar marca en `favicon.svg`.
+- ❌ Asumir que `apple-touch-icon` cubre Android — **no**; Android usa solo el manifiesto.
