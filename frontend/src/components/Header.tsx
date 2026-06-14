@@ -26,7 +26,7 @@ export function Header() {
         <Link
           to="/"
           className="flex shrink-0 items-center"
-          aria-label="Laboratorio médico y salud ocupacional Azabache - Inicio"
+          aria-label="ROGA Laboratorio médico y salud ocupacional - Inicio"
           onClick={() => setOpen(false)}
         >
           <Wordmark variant="light" />
@@ -57,7 +57,7 @@ export function Header() {
             to="/agendar"
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-[var(--primary-hover)] focus:outline-none focus:ring-2 focus:ring-primary/40 focus:ring-offset-2 focus:ring-offset-[#1a1e23]"
           >
-            Agendar cita
+            Agendar Consulta Médica
           </Link>
         </nav>
 
@@ -109,7 +109,7 @@ export function Header() {
                 onClick={() => setOpen(false)}
                 className="block w-full rounded-md bg-primary px-4 py-2 text-center text-sm font-semibold text-primary-foreground hover:bg-[var(--primary-hover)]"
               >
-                Agendar cita
+                Agendar Consulta Médica
               </Link>
             </li>
           </ul>

@@ -6,8 +6,8 @@ import {
   FileBadge,
   FlaskConical,
   Gauge,
-  ScanLine,
   Stethoscope,
+  TestTubes,
   Wind,
   type LucideIcon,
 } from "lucide-react";
@@ -15,12 +15,12 @@ import type { ServicioIconKey } from "../lib/servicios";
 
 const SERVICIO_ICONS: Record<ServicioIconKey, LucideIcon> = {
   laboratorio: FlaskConical,
+  antidoping: TestTubes,
   examenes: ClipboardList,
   certificados: FileBadge,
   espirometria: Wind,
   audiometria: Ear,
   electrocardiograma: Activity,
-  "rayos-x": ScanLine,
   consulta: Stethoscope,
   enfermeria: Bandage,
   "presion-arterial": Gauge,

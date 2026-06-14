@@ -1,5 +1,5 @@
 -- =============================================================================
--- Esquema Supabase: Laboratorio médico y salud ocupacional Azabache
+-- Esquema Supabase: ROGA Laboratorio médico y salud ocupacional
 -- Aplicar manualmente desde el SQL Editor de Supabase.
 -- Las tablas no se auto-crean desde el código.
 -- =============================================================================

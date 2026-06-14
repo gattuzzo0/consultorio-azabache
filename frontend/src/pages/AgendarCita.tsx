@@ -1,13 +1,13 @@
 import { useMemo, useState } from "react";
 import { Alert, Button, TextField } from "@mui/material";
-import { Check, Home as HomeIcon } from "lucide-react";
+import { Home as HomeIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { StepIndicator, type Step } from "../components/StepIndicator";
 import { Calendar } from "../components/Calendar";
 import { TimeSlots } from "../components/TimeSlots";
 import { DoctorAvatar } from "../components/DoctorCard";
 import { WhatsAppIcon } from "../components/WhatsAppIcon";
-import { DOCTORS, findDoctor } from "../lib/doctors";
+import { findDoctor } from "../lib/doctors";
 import {
   buildConsultAvailabilityMessage,
   getDoctorWhatsAppDigits,
@@ -19,17 +19,36 @@ import {
 } from "../lib/format";
 import { openWhatsApp } from "../lib/openWhatsApp";
 
+const DOCTOR_ID = "gloria-vazquez";
+
 const STEPS: Step[] = [
-  { id: 1, label: "Selecciona doctora" },
-  { id: 2, label: "Selecciona fecha" },
-  { id: 3, label: "Selecciona horario" },
-  { id: 4, label: "Tus datos" },
-  { id: 5, label: "Confirmación" },
+  { id: 1, label: "Selecciona fecha" },
+  { id: 2, label: "Selecciona horario" },
+  { id: 3, label: "Tus datos" },
+  { id: 4, label: "Confirmación" },
 ];
 
-const TIME_SLOTS = ["09:00 AM", "10:30 AM", "12:00 PM", "04:00 PM"];
+const WEEKDAY_SLOTS = [
+  "9:00 AM",
+  "10:00 AM",
+  "11:00 AM",
+  "12:00 PM",
+  "1:00 PM",
+  "2:00 PM",
+  "3:00 PM",
+  "4:00 PM",
+];
+const SATURDAY_SLOTS = ["9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM"];
 
-const PHONE_RE = /^[\d\s+()-]{7,}$/;
+function slotsForDate(date: Date | null): string[] {
+  if (!date) return [];
+  const dow = date.getDay();
+  if (dow === 6) return SATURDAY_SLOTS;
+  if (dow >= 1 && dow <= 5) return WEEKDAY_SLOTS;
+  return [];
+}
+
+const PHONE_RE = /^\d{10}$/;
 
 type FormErrors = {
   patientName?: string;
@@ -48,7 +67,7 @@ type WhatsAppCompletion = {
 };
 
 export function AgendarCita() {
-  const [doctorId, setDoctorId] = useState<string | null>(null);
+  const doctorId = DOCTOR_ID;
   const [viewMonth, setViewMonth] = useState<Date>(() =>
     startOfMonth(new Date()),
   );
@@ -64,30 +83,33 @@ export function AgendarCita() {
     null,
   );
 
+  const availableSlots = useMemo(
+    () => slotsForDate(selectedDate),
+    [selectedDate],
+  );
+
   const currentStep = useMemo(() => {
-    if (!doctorId) return 1;
-    if (!selectedDate) return 2;
-    if (!selectedSlot) return 3;
-    if (!completion) return 4;
-    return 5;
-  }, [doctorId, selectedDate, selectedSlot, completion]);
+    if (!selectedDate) return 1;
+    if (!selectedSlot) return 2;
+    if (!completion) return 3;
+    return 4;
+  }, [selectedDate, selectedSlot, completion]);
 
   const completedSteps = useMemo(() => {
     const completed: number[] = [];
-    if (doctorId) completed.push(1);
-    if (selectedDate) completed.push(2);
-    if (selectedSlot) completed.push(3);
-    if (completion) completed.push(4, 5);
+    if (selectedDate) completed.push(1);
+    if (selectedSlot) completed.push(2);
+    if (completion) completed.push(3, 4);
     return completed;
-  }, [doctorId, selectedDate, selectedSlot, completion]);
+  }, [selectedDate, selectedSlot, completion]);
 
   function validate(): FormErrors {
     const e: FormErrors = {};
     if (!patientName.trim() || patientName.trim().length < 3) {
       e.patientName = "Ingresa tu nombre completo.";
     }
-    if (!PHONE_RE.test(patientPhone.trim())) {
-      e.patientPhone = "Ingresa un teléfono válido.";
+    if (!PHONE_RE.test(patientPhone)) {
+      e.patientPhone = "Ingresa un teléfono de 10 dígitos.";
     }
     if (!reason.trim() || reason.trim().length < 4) {
       e.reason = "Cuéntanos brevemente el motivo de tu consulta.";
@@ -97,10 +119,9 @@ export function AgendarCita() {
 
   function handleSubmit(ev: React.FormEvent) {
     ev.preventDefault();
-    if (!doctorId || !selectedDate || !selectedSlot) {
+    if (!selectedDate || !selectedSlot) {
       setErrors({
-        general:
-          "Completa los pasos previos: doctora, fecha y horario.",
+        general: "Completa los pasos previos: fecha y horario.",
       });
       return;
     }
@@ -151,7 +172,7 @@ export function AgendarCita() {
       <ConfirmationView
         completion={completion}
         steps={STEPS}
-        currentStep={5}
+        currentStep={4}
         completedSteps={completedSteps}
       />
     );
@@ -176,61 +197,29 @@ export function AgendarCita() {
           />
         </div>
 
-        <form onSubmit={handleSubmit} noValidate>
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-            {/* Paso 1: Doctora */}
-            <div className="rounded-2xl border border-border bg-card p-5 shadow-card">
-              <h2 className="text-base font-semibold text-foreground">
-                1. Selecciona doctora
-              </h2>
-              <ul className="mt-4 space-y-3">
-                {DOCTORS.map((d) => {
-                  const isSelected = doctorId === d.id;
-                  return (
-                    <li key={d.id}>
-                      <button
-                        type="button"
-                        onClick={() => setDoctorId(d.id)}
-                        className={[
-                          "flex w-full items-center gap-3 rounded-lg border p-3 text-left transition-colors",
-                          isSelected
-                            ? "border-primary bg-accent/40 ring-1 ring-primary"
-                            : "border-border bg-card hover:bg-muted",
-                        ].join(" ")}
-                        aria-pressed={isSelected}
-                      >
-                        <DoctorAvatar
-                          doctor={d}
-                          size={44}
-                          rounded="md"
-                        />
-                        <div className="min-w-0 flex-1">
-                          <p className="truncate text-sm font-semibold text-foreground">
-                            {d.shortName}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {d.specialty}
-                          </p>
-                        </div>
-                        {isSelected && (
-                          <span
-                            aria-hidden="true"
-                            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground"
-                          >
-                            <Check size={14} />
-                          </span>
-                        )}
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
+        {selectedDoctor && (
+          <div className="mb-6 flex items-center gap-4 rounded-2xl border border-border bg-card p-5 shadow-card">
+            <DoctorAvatar doctor={selectedDoctor} size={56} rounded="md" />
+            <div className="min-w-0">
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Tu consulta médica será con
+              </p>
+              <p className="truncate text-base font-semibold text-foreground">
+                {selectedDoctor.shortName}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {selectedDoctor.specialty}
+              </p>
             </div>
+          </div>
+        )}
 
-            {/* Paso 2: Fecha */}
+        <form onSubmit={handleSubmit} noValidate>
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            {/* Paso 1: Fecha */}
             <div className="rounded-2xl border border-border bg-card p-5 shadow-card">
               <h2 className="text-base font-semibold text-foreground">
-                2. Selecciona fecha
+                1. Selecciona fecha
               </h2>
               <div className="mt-4">
                 <Calendar
@@ -245,14 +234,14 @@ export function AgendarCita() {
               </div>
             </div>
 
-            {/* Paso 3: Horario */}
+            {/* Paso 2: Horario */}
             <div className="rounded-2xl border border-border bg-card p-5 shadow-card">
               <h2 className="text-base font-semibold text-foreground">
-                3. Selecciona horario disponible
+                2. Selecciona horario disponible
               </h2>
               <div className="mt-4">
                 <TimeSlots
-                  slots={TIME_SLOTS}
+                  slots={availableSlots}
                   selected={selectedSlot}
                   onSelect={setSelectedSlot}
                   disabled={!selectedDate}
@@ -261,10 +250,10 @@ export function AgendarCita() {
             </div>
           </div>
 
-          {/* Paso 4: Datos */}
+          {/* Paso 3: Datos */}
           <div className="mt-6 rounded-2xl border border-border bg-card p-6 shadow-card">
             <h2 className="text-base font-semibold text-foreground">
-              4. Tus datos
+              3. Tus datos
             </h2>
 
             <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -280,12 +269,16 @@ export function AgendarCita() {
               />
               <TextField
                 label="Teléfono"
-                placeholder="Ingresa tu teléfono"
+                placeholder="(10 dígitos) Ej. 4448111213"
                 value={patientPhone}
-                onChange={(e) => setPatientPhone(e.target.value)}
+                onChange={(e) =>
+                  setPatientPhone(e.target.value.replace(/\D/g, "").slice(0, 10))
+                }
                 error={Boolean(errors.patientPhone)}
                 helperText={errors.patientPhone}
-                inputMode="tel"
+                slotProps={{
+                  htmlInput: { maxLength: 10, inputMode: "numeric", pattern: "[0-9]*" },
+                }}
                 fullWidth
                 size="medium"
               />

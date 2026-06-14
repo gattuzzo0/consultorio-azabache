@@ -1,11 +1,11 @@
 export type ServicioIconKey =
   | "laboratorio"
+  | "antidoping"
   | "examenes"
   | "certificados"
   | "espirometria"
   | "audiometria"
   | "electrocardiograma"
-  | "rayos-x"
   | "consulta"
   | "enfermeria"
   | "presion-arterial";
@@ -34,6 +34,15 @@ export const SERVICIOS: Servicio[] = [
     description:
       "Análisis clínicos de sangre, orina y otros fluidos. Incluye perfiles básicos y estudios especializados según el requerimiento médico u ocupacional.",
     prices: [{ label: "Perfil básico", range: "$200 – $1,500+" }],
+  },
+  {
+    id: "antidoping",
+    name: "Antidoping",
+    icon: "antidoping",
+    imageSrc: "/servicio-antidoping.png",
+    description:
+      "Detección de sustancias prohibidas en orina para exámenes de ingreso, revisiones periódicas y cumplimiento de políticas de medicina ocupacional.",
+    prices: [{ label: "Panel básico", range: "$300 – $900" }],
   },
   {
     id: "examenes",
@@ -79,15 +88,6 @@ export const SERVICIOS: Servicio[] = [
     description:
       "Registro de la actividad eléctrica del corazón (ECG) para valorar ritmo cardíaco y apoyar el diagnóstico en consulta o examen médico.",
     prices: [{ range: "$250 – $700" }],
-  },
-  {
-    id: "rayos-x",
-    name: "Rayos X",
-    icon: "rayos-x",
-    imageSrc: "/servicio-rayosx.png",
-    description:
-      "Estudios radiológicos simples para apoyo diagnóstico en consulta médica y evaluaciones de salud ocupacional.",
-    prices: [{ label: "Estudio simple", range: "$250 – $800" }],
   },
   {
     id: "consulta",

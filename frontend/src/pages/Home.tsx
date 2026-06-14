@@ -14,10 +14,10 @@ export function Home() {
           <div className="order-2 flex flex-col justify-center lg:order-1">
             <h1 className="display-heading text-4xl leading-[1.08] sm:text-5xl lg:text-[3.25rem]">
               <span className="block font-serif text-[#f5f5f5]">
-                Laboratorio de
+                En un solo lugar
               </span>
               <span className="hero-gradient-text mt-1 block text-[2rem] sm:text-[2.65rem] lg:text-[3rem]">
-                análisis clínicos y medicina ocupacional
+                análisis clínicos y consulta médica
               </span>
             </h1>
             <p className="mt-6 max-w-md text-sm leading-relaxed text-white/60 sm:text-base">
@@ -29,7 +29,7 @@ export function Home() {
                 to="/agendar"
                 className="hero-btn-primary inline-flex items-center justify-center rounded-lg px-6 py-3 text-sm font-semibold text-white shadow-md transition-[filter,transform] hover:brightness-110 active:scale-[0.98]"
               >
-                Agendar cita
+                Agendar Consulta Médica
               </Link>
               <Link
                 to="/ubicacion"

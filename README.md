@@ -1,6 +1,6 @@
-# Laboratorio médico y salud ocupacional Azabache
+# ROGA Laboratorio médico y salud ocupacional
 
-Sitio web del Laboratorio médico y salud ocupacional Azabache: información del consultorio, doctoras, ubicación y agenda en línea de citas.
+Sitio web del ROGA Laboratorio médico y salud ocupacional: información del consultorio, doctoras, ubicación y agenda en línea de citas.
 
 ## Stack
 

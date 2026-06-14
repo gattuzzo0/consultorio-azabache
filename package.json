@@ -2,7 +2,7 @@
   "name": "consultorio-azabache",
   "private": true,
   "version": "0.1.0",
-  "description": "Sitio web del Laboratorio médico y salud ocupacional Azabache (monorepo).",
+  "description": "Sitio web del ROGA Laboratorio médico y salud ocupacional (monorepo).",
   "scripts": {
     "prepare": "husky",
     "eslint": "npm run eslint --prefix frontend",
