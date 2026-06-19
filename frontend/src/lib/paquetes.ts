@@ -75,7 +75,7 @@ export const PAQUETES: Paquete[] = [
       "Examen General de orina",
       "Química sanguínea 27 elementos",
     ],
-    price: "$789.00",
+    price: "$799.00",
     imageSrc: imgChequeoBasicoII,
     imageAlt: "Chequeo básico II — biometría, orina y química sanguínea completa",
   },
@@ -109,3 +109,8 @@ export const PAQUETES: Paquete[] = [
     imageAlt: "Prueba de detección de Dengue",
   },
 ];
+
+/** Máximo de ítems en cualquier paquete (Chequeo básico I). Altura uniforme del carrusel. */
+export const MAX_PAQUETE_LIST_ITEMS = Math.max(
+  ...PAQUETES.map((p) => p.items.length),
+);
