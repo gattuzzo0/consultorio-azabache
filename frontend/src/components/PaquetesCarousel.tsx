@@ -5,6 +5,7 @@ import { MAX_PAQUETE_LIST_ITEMS, PAQUETES, type Paquete } from "../lib/paquetes"
 const INTERVAL_MS = 5000;
 const SWIPE_THRESHOLD_PX = 60;
 const SWIPE_HORIZONTAL_RATIO = 2;
+const SWIPE_AXIS_LOCK_PX = 10;
 
 type ListSlot = { text: string | null; id: string };
 
@@ -27,6 +28,7 @@ function centeredListSlots(items: readonly string[], maxItems: number): ListSlot
 }
 
 type SwipeStart = { x: number; y: number };
+type SwipeAxis = "horizontal" | "vertical" | null;
 
 type PaqueteSlideProps = {
   paquete: Paquete;
@@ -97,6 +99,7 @@ function PaqueteSlide({
 export function PaquetesCarousel() {
   const viewportRef = useRef<HTMLDivElement>(null);
   const swipeStartRef = useRef<SwipeStart | null>(null);
+  const swipeAxisRef = useRef<SwipeAxis>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [hoverPaused, setHoverPaused] = useState(false);
   const [gesturePaused, setGesturePaused] = useState(false);
@@ -122,6 +125,7 @@ export function PaquetesCarousel() {
 
   const resetSwipe = useCallback(() => {
     swipeStartRef.current = null;
+    swipeAxisRef.current = null;
     setDragOffset(0);
     setIsSwiping(false);
     setGesturePaused(false);
@@ -129,13 +133,11 @@ export function PaquetesCarousel() {
 
   const finishSwipe = useCallback(
     (deltaX: number, deltaY: number) => {
-      const start = swipeStartRef.current;
       swipeStartRef.current = null;
+      swipeAxisRef.current = null;
       setDragOffset(0);
       setIsSwiping(false);
       setGesturePaused(false);
-
-      if (!start) return;
 
       const isValidSwipe =
         Math.abs(deltaX) >= SWIPE_THRESHOLD_PX &&
@@ -151,23 +153,28 @@ export function PaquetesCarousel() {
 
   const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
     if (event.touches.length !== 1) {
-      swipeStartRef.current = null;
+      resetSwipe();
       return;
     }
 
     const touch = event.touches[0];
     swipeStartRef.current = { x: touch.clientX, y: touch.clientY };
-    setIsSwiping(true);
-    setGesturePaused(true);
+    swipeAxisRef.current = null;
   };
 
   const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
-    if (!swipeStartRef.current) return;
+    if (swipeAxisRef.current === "vertical") {
+      resetSwipe();
+      return;
+    }
+
+    const start = swipeStartRef.current;
+    if (!start) return;
 
     const touch = event.changedTouches[0];
     finishSwipe(
-      touch.clientX - swipeStartRef.current.x,
-      touch.clientY - swipeStartRef.current.y,
+      touch.clientX - start.x,
+      touch.clientY - start.y,
     );
   };
 
@@ -193,9 +200,30 @@ export function PaquetesCarousel() {
       const start = swipeStartRef.current;
       if (!start || event.touches.length !== 1) return;
 
-      event.preventDefault();
       const touch = event.touches[0];
-      setDragOffset(touch.clientX - start.x);
+      const deltaX = touch.clientX - start.x;
+      const deltaY = touch.clientY - start.y;
+
+      if (swipeAxisRef.current === "vertical") return;
+
+      if (swipeAxisRef.current === null) {
+        const travel = Math.max(Math.abs(deltaX), Math.abs(deltaY));
+        if (travel < SWIPE_AXIS_LOCK_PX) return;
+
+        if (Math.abs(deltaY) > Math.abs(deltaX)) {
+          swipeAxisRef.current = "vertical";
+          return;
+        }
+
+        swipeAxisRef.current = "horizontal";
+        setIsSwiping(true);
+        setGesturePaused(true);
+      }
+
+      if (swipeAxisRef.current !== "horizontal") return;
+
+      event.preventDefault();
+      setDragOffset(deltaX);
     };
 
     viewport.addEventListener("touchmove", handleTouchMove, { passive: false });
