@@ -5,25 +5,51 @@ import { HeroGlassCard } from "../components/HeroGlassCard";
 import { PaquetesCarousel } from "../components/PaquetesCarousel";
 import { ParticlesBand } from "../components/ParticlesBand";
 import { ServiciosSection } from "../components/ServiciosSection";
+import { EquipoSection } from "../components/EquipoSection";
 import { SaludOcupacionalTeaser } from "../components/SaludOcupacionalTeaser";
+import { scrollToSection } from "../lib/scrollToSection";
+import heroBackgroundVideo from "../assets/paquetes/background.mp4";
+
+const PAQUETES_SECTION_ID = "paquetes";
 
 export function Home() {
+  const handleConsultarPaquetes = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+  ) => {
+    event.preventDefault();
+    scrollToSection(PAQUETES_SECTION_ID);
+  };
+
   return (
     <div className="home-dark-surface">
       <section className="hero-section text-white">
-        <div className="mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-10 px-4 py-14 sm:px-6 md:py-20 lg:grid-cols-2 lg:gap-14 lg:px-8 lg:py-24">
+        <video
+          className="hero-section__video"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-hidden
+          tabIndex={-1}
+        >
+          <source src={heroBackgroundVideo} type="video/mp4" />
+        </video>
+        <div className="hero-section__overlay" aria-hidden />
+        <div className="hero-section__content mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-10 px-4 py-14 sm:px-6 md:py-20 lg:grid-cols-2 lg:gap-14 lg:px-8 lg:py-24">
           <div className="order-2 flex flex-col justify-center lg:order-1">
-            <h1 className="display-heading text-4xl leading-[1.08] sm:text-5xl lg:text-[3.25rem]">
-              <span className="block font-serif text-[#f5f5f5]">
-                En un solo lugar
+            <h1 className="display-heading text-4xl sm:text-5xl lg:text-[3.5rem]">
+              <span className="block text-[#f5f5f5]">
+                Resultados que importan
               </span>
-              <span className="hero-gradient-text mt-1 block text-[2rem] sm:text-[2.65rem] lg:text-[3rem]">
-                análisis clínicos y consulta médica
+              <span className="hero-gradient-text mt-1 block text-[2.25rem] sm:text-[3rem] lg:text-[3.5rem]">
+                estudios, consulta y certificación médica
               </span>
             </h1>
             <p className="mt-6 max-w-md text-sm leading-relaxed text-white/60 sm:text-base">
-              Laboratorio especializado en análisis clínicos y medicina
-              ocupacional, con un equipo comprometido con tu salud y bienestar.
+              Laboratorio clínico y consulta médica en San Luis Potosí. Chequeos,
+              antidoping, certificados y atención para empresas — con trato
+              humano y tiempos ágiles.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-stretch">
               <AnimatedContent
@@ -59,7 +85,8 @@ export function Home() {
                 delay={0.25}
               >
                 <a
-                  href="#paquetes"
+                  href={`#${PAQUETES_SECTION_ID}`}
+                  onClick={handleConsultarPaquetes}
                   className="hero-btn-outline inline-flex w-full items-center justify-center rounded-lg border-2 px-6 py-3 text-sm font-semibold transition-colors hover:bg-[rgba(212,109,49,0.12)]"
                 >
                   Consultar paquetes
@@ -88,6 +115,8 @@ export function Home() {
         <PaquetesCarousel />
 
         <ServiciosSection />
+
+        <EquipoSection />
 
         <SaludOcupacionalTeaser />
       </ParticlesBand>

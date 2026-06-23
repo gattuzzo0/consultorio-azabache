@@ -82,7 +82,7 @@ export function ServicioDetailOverlay({
         </div>
 
         <div className="space-y-5 p-5 sm:p-6">
-          <p className="text-sm leading-relaxed text-foreground-soft">
+          <p className="whitespace-pre-line text-sm leading-relaxed text-foreground-soft">
             {servicio.description}
           </p>
 
@@ -111,10 +111,13 @@ export function ServicioDetailOverlay({
                 </li>
               ))}
             </ul>
+            {/*
             <p className="mt-3 text-xs text-muted-foreground">
               Los precios pueden variar según el estudio solicitado. Consulta
               disponibilidad al agendar.
             </p>
+            */}
+       
           </div>
         </div>
       </article>

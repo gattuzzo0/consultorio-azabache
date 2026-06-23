@@ -5,6 +5,7 @@ type DoctorAvatarProps = {
   size?: number;
   rounded?: "full" | "md";
   className?: string;
+  onPhotoClick?: () => void;
 };
 
 export function DoctorAvatar({
@@ -12,15 +13,16 @@ export function DoctorAvatar({
   size = 96,
   rounded = "full",
   className,
+  onPhotoClick,
 }: DoctorAvatarProps) {
   const radius = rounded === "full" ? "9999px" : "12px";
   const objectPosition = doctor.photoObjectPosition ?? "center 30%";
 
   if (doctor.photoSrc) {
-    return (
+    const image = (
       <img
         src={doctor.photoSrc}
-        alt=""
+        alt={`Retrato de ${doctor.shortName}`}
         width={size}
         height={size}
         className={["shrink-0 object-cover", className].filter(Boolean).join(" ")}
@@ -34,6 +36,27 @@ export function DoctorAvatar({
         decoding="async"
       />
     );
+
+    if (onPhotoClick) {
+      return (
+        <button
+          type="button"
+          onClick={onPhotoClick}
+          className="group relative shrink-0 cursor-zoom-in focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
+          style={{ borderRadius: radius }}
+          aria-label={`Ver foto ampliada de ${doctor.shortName}`}
+        >
+          {image}
+          <span
+            className="pointer-events-none absolute inset-0 transition-colors group-hover:bg-black/10"
+            style={{ borderRadius: radius }}
+            aria-hidden
+          />
+        </button>
+      );
+    }
+
+    return image;
   }
 
   return (

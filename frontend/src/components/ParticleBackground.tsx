@@ -65,6 +65,14 @@ export function ParticleBackground({ className }: ParticleBackgroundProps) {
       createParticles();
     };
 
+    // 5 alpha buckets → 5 stroke() calls per frame instead of O(n²) individual strokes
+    const ALPHA_BUCKETS = 5;
+    const MAX_LINE_ALPHA = 0.09;
+    const bucketAlphas = Array.from(
+      { length: ALPHA_BUCKETS },
+      (_, i) => ((i + 0.5) / ALPHA_BUCKETS) * MAX_LINE_ALPHA,
+    );
+
     const draw = () => {
       ctx.clearRect(0, 0, width, height);
 
@@ -78,7 +86,13 @@ export function ParticleBackground({ className }: ParticleBackgroundProps) {
 
         a.x = Math.max(0, Math.min(width, a.x));
         a.y = Math.max(0, Math.min(height, a.y));
+      }
 
+      // Batch lines by alpha bucket to minimize ctx.stroke() calls
+      const paths = Array.from({ length: ALPHA_BUCKETS }, () => new Path2D());
+
+      for (let i = 0; i < particles.length; i += 1) {
+        const a = particles[i];
         for (let j = i + 1; j < particles.length; j += 1) {
           const b = particles[j];
           const dx = a.x - b.x;
@@ -86,14 +100,20 @@ export function ParticleBackground({ className }: ParticleBackgroundProps) {
           const dist = Math.hypot(dx, dy);
           if (dist > LINK_DISTANCE) continue;
 
-          const alpha = (1 - dist / LINK_DISTANCE) * 0.09;
-          ctx.beginPath();
-          ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
-          ctx.lineWidth = 0.55;
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.stroke();
+          const alpha = (1 - dist / LINK_DISTANCE) * MAX_LINE_ALPHA;
+          const bucketIdx = Math.min(
+            ALPHA_BUCKETS - 1,
+            Math.floor((alpha / MAX_LINE_ALPHA) * ALPHA_BUCKETS),
+          );
+          paths[bucketIdx].moveTo(a.x, a.y);
+          paths[bucketIdx].lineTo(b.x, b.y);
         }
+      }
+
+      ctx.lineWidth = 0.55;
+      for (let k = 0; k < ALPHA_BUCKETS; k += 1) {
+        ctx.strokeStyle = `rgba(255,255,255,${bucketAlphas[k]})`;
+        ctx.stroke(paths[k]);
       }
 
       for (const p of particles) {

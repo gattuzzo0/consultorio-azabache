@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Bebas Neue", "Arial Narrow", sans-serif;
 
   /* Marca */
   --brand-ink: #0b1220;
@@ -43,6 +44,7 @@
 
 @theme {
   --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -106,10 +108,18 @@ body {
   opacity: 0.75;
 }
 
-/* Heading display: peso fuerte + tracking apretado al estilo del screenshot */
+/* Titulares display — Bebas Neue */
 .display-heading {
-  font-weight: 800;
-  letter-spacing: -0.025em;
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.02em;
   line-height: 1.05;
 }
 
@@ -119,15 +129,55 @@ body {
   color: var(--premium-text);
 }
 
-/* Hero premium: fondo carbón, naranja solo como acento luminoso */
-.hero-section {
+/* Secciones con video de fondo + máscara oscura */
+.hero-section,
+.salud-ocupacional-section {
   position: relative;
-  background: transparent;
+  overflow: hidden;
+  background: var(--hero-bg);
+}
+
+.hero-section__video,
+.salud-ocupacional-section__video {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.hero-section__overlay,
+.salud-ocupacional-section__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(18, 18, 18, 0.72) 0%,
+    rgba(18, 18, 18, 0.82) 55%,
+    rgba(18, 18, 18, 0.88) 100%
+  );
+}
+
+.hero-section__content,
+.salud-ocupacional-section__content {
+  position: relative;
+  z-index: 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-section__video,
+  .salud-ocupacional-section__video {
+    display: none;
+  }
 }
 
 .hero-gradient-text {
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-weight: 400;
+  letter-spacing: 0.02em;
   background: linear-gradient(
     180deg,
     #f0c090 0%,
@@ -212,6 +262,34 @@ body {
   background: transparent;
 }
 
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--hero-bg);
+  opacity: 1;
+  transition: opacity 320ms ease;
+}
+
+.splash-screen--exit {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.splash-screen__inner {
+  width: min(100%, 22rem);
+  padding: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .splash-screen__inner {
+    width: min(100%, 28rem);
+  }
+}
+
 .hero-molecule {
   animation: hero-mol-float 9s ease-in-out infinite;
   filter: drop-shadow(0 0 6px rgba(230, 126, 34, 0.65));
@@ -251,7 +329,9 @@ body {
 }
 
 .font-serif {
-  font-family: Georgia, "Times New Roman", "Liberation Serif", serif;
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.02em;
 }
 
 /* Avatares de doctora con iniciales (placeholder mientras no hay foto real) */
@@ -322,18 +402,38 @@ body {
 }
 
 .team-section__heading {
+  font-family: var(--font-display);
+  font-weight: 400;
   color: var(--premium-text);
-  letter-spacing: -0.02em;
+  letter-spacing: 0.02em;
+  line-height: 1.05;
 }
 
 .team-section__subheading {
   color: rgba(245, 245, 245, 0.55);
 }
 
+.team-section__photo-wrap {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 1.25rem;
+  background: rgba(0, 0, 0, 0.25);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.2),
+    0 12px 40px rgba(0, 0, 0, 0.25);
+}
+
+.team-section__photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
 /* Sección paquetes promocionales — carrusel */
 .paquetes-section {
   position: relative;
-  scroll-margin-top: -3.50rem;
+  scroll-margin-top: 1.5rem;
 }
 
 .paquetes-section__ambient {
@@ -361,8 +461,11 @@ body {
 }
 
 .paquetes-section__heading {
+  font-family: var(--font-display);
+  font-weight: 400;
   color: var(--premium-text);
-  letter-spacing: -0.02em;
+  letter-spacing: 0.02em;
+  line-height: 1.05;
 }
 
 .salud-ocupacional-teaser {

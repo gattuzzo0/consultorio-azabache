@@ -6,6 +6,7 @@ import { StepIndicator, type Step } from "../components/StepIndicator";
 import { Calendar } from "../components/Calendar";
 import { TimeSlots } from "../components/TimeSlots";
 import { DoctorAvatar } from "../components/DoctorCard";
+import { PhotoLightbox } from "../components/PhotoLightbox";
 import { WhatsAppIcon } from "../components/WhatsAppIcon";
 import { findDoctor } from "../lib/doctors";
 import {
@@ -82,6 +83,7 @@ export function AgendarCita() {
   const [completion, setCompletion] = useState<WhatsAppCompletion | null>(
     null,
   );
+  const [photoExpanded, setPhotoExpanded] = useState(false);
 
   const availableSlots = useMemo(
     () => slotsForDate(selectedDate),
@@ -184,7 +186,7 @@ export function AgendarCita() {
     <section className="bg-muted py-8 sm:py-12">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <header className="mb-6">
-          <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h1 className="font-display text-3xl tracking-tight text-foreground sm:text-4xl">
             Agendar cita
           </h1>
         </header>
@@ -198,8 +200,13 @@ export function AgendarCita() {
         </div>
 
         {selectedDoctor && (
-          <div className="mb-6 flex items-center gap-4 rounded-2xl border border-border bg-card p-5 shadow-card">
-            <DoctorAvatar doctor={selectedDoctor} size={56} rounded="md" />
+          <div className="mb-6 flex items-center gap-5 rounded-2xl border border-border bg-card p-5 shadow-card sm:gap-6 sm:p-6">
+            <DoctorAvatar
+              doctor={selectedDoctor}
+              size={80}
+              rounded="md"
+              onPhotoClick={() => setPhotoExpanded(true)}
+            />
             <div className="min-w-0">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Tu consulta médica será con
@@ -210,9 +217,24 @@ export function AgendarCita() {
               <p className="text-sm text-muted-foreground">
                 {selectedDoctor.specialty}
               </p>
+              {selectedDoctor.photoSrc ? (
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Toca la foto para ampliarla
+                </p>
+              ) : null}
             </div>
           </div>
         )}
+
+        {photoExpanded && selectedDoctor?.photoSrc ? (
+          <PhotoLightbox
+            src={selectedDoctor.photoSrc}
+            alt={`Retrato de ${selectedDoctor.shortName}`}
+            objectPosition={selectedDoctor.photoObjectPosition}
+            caption={selectedDoctor.shortName}
+            onClose={() => setPhotoExpanded(false)}
+          />
+        ) : null}
 
         <form onSubmit={handleSubmit} noValidate>
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -362,7 +384,7 @@ function ConfirmationView({
     <section className="bg-muted py-8 sm:py-12">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <header className="mb-6">
-          <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h1 className="font-display text-3xl tracking-tight text-foreground sm:text-4xl">
             Agendar cita
           </h1>
         </header>
@@ -379,7 +401,7 @@ function ConfirmationView({
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-accent text-primary">
             <WhatsAppIcon size={36} />
           </div>
-          <h2 className="mt-5 text-2xl font-bold text-foreground">
+          <h2 className="font-display mt-5 text-2xl text-foreground">
             Mensaje listo en WhatsApp
           </h2>
           <p className="mt-2 text-sm text-foreground-soft">

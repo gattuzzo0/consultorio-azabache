@@ -251,7 +251,7 @@ export function PaquetesCarousel() {
       <div className="paquetes-section__inner mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <h2
           id="paquetes-heading"
-          className="paquetes-section__heading text-center text-3xl font-bold tracking-tight sm:text-4xl"
+          className="paquetes-section__heading text-center text-3xl tracking-tight sm:text-4xl"
         >
           Paquetes promocionales
         </h2>

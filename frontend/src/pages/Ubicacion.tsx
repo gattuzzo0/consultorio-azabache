@@ -22,7 +22,7 @@ const MAP_BBOX_LAT_SPAN = 0.0036;
 /** Multiplica ambos spans (>1 aleja, <1 acerca el encuadre). */
 const MAP_ZOOM_FACTOR = 1;
 
-const UBICACION_WHATSAPP_HREF = "https://wa.me/5214449876543";
+const UBICACION_WHATSAPP_HREF = "https://wa.me/5214448593032";
 const MAPS_DIRECTIONS_URL = ubicacionDirectionsUrl();
 
 function buildOsmEmbedSrc(): string {
@@ -58,12 +58,11 @@ export function Ubicacion() {
                 variant="h4"
                 component="h1"
                 sx={{
-                  fontFamily:
-                    'Georgia, "Times New Roman", "Liberation Serif", serif',
-                  fontWeight: 700,
-                  letterSpacing: "-0.02em",
+                  fontFamily: '"Bebas Neue", "Arial Narrow", sans-serif',
+                  fontWeight: 400,
+                  letterSpacing: "0.02em",
                   color: "text.primary",
-                  lineHeight: 1.2,
+                  lineHeight: 1.1,
                 }}
               >
                 Nuestra ubicación
@@ -118,7 +117,7 @@ export function Ubicacion() {
           </div>
 
           <aside className="rounded-2xl border border-border bg-card p-6 shadow-card">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="font-display text-xl text-foreground">
               Información de contacto
             </h2>
 
@@ -157,7 +156,7 @@ export function Ubicacion() {
                       openWhatsApp(UBICACION_WHATSAPP_HREF);
                     }}
                   >
-                    444 567 6565
+                    444 859 3032
                   </a>
                 </div>
               </li>
