@@ -3,11 +3,11 @@ import { MapPin, MessageCircle } from "lucide-react";
 import { HORARIO_LABORAL } from "../lib/horarios";
 import { openWhatsApp } from "../lib/openWhatsApp";
 
-const FOOTER_WHATSAPP_HREF = "https://wa.me/5214445676565";
+const FOOTER_WHATSAPP_HREF = "https://wa.me/5214448593032";
 
 export function Footer() {
   return (
-    <footer className="bg-brand-ink text-white/80">
+    <footer className="bg-hero text-white/80">
       <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
           <div className="md:col-span-1">
@@ -50,7 +50,7 @@ export function Footer() {
                     openWhatsApp(FOOTER_WHATSAPP_HREF);
                   }}
                 >
-                  444 567 6565
+                  444 859 3032
                 </a>
               </li>
             </ul>

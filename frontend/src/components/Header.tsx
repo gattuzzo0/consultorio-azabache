@@ -6,21 +6,16 @@ import { Wordmark } from "./Logo";
 const NAV_LINKS = [
   { to: "/", label: "Inicio", end: true },
   { to: "/salud-ocupacional", label: "Salud ocupacional" },
+  { to: "/como-cuidar-tu-salud", label: "Salud preventiva" },
   { to: "/ubicacion", label: "Ubicación" },
 ];
 
 export function Header() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
-  const isHome = location.pathname === "/";
 
   return (
-    <header
-      className={[
-        "text-white",
-        isHome ? "bg-hero" : "bg-brand-ink",
-      ].join(" ")}
-    >
+    <header className="bg-hero text-white">
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:h-[72px] lg:px-8">
         <Link
           to="/"
@@ -74,10 +69,7 @@ export function Header() {
       {open && (
         <nav
           aria-label="Navegación móvil"
-          className={[
-            "border-t border-white/5 md:hidden",
-            isHome ? "bg-hero" : "bg-brand-ink",
-          ].join(" ")}
+          className="border-t border-white/5 bg-hero md:hidden"
         >
           <ul className="flex flex-col gap-1 p-4">
             {NAV_LINKS.map((link) => {

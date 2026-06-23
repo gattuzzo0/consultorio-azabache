@@ -15,7 +15,7 @@ export function ServiciosSection() {
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <h2
           id="servicios-heading"
-          className="text-center text-3xl font-bold tracking-tight text-white drop-shadow-sm sm:text-4xl"
+          className="font-display text-center text-3xl tracking-tight text-white drop-shadow-sm sm:text-4xl"
         >
           Servicios
         </h2>

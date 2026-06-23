@@ -1,3 +1,5 @@
+import gloriaVazquezPhoto from "../assets/paquetes/gloria_vazquez.jpeg";
+
 export type Doctor = {
   id: string;
   name: string;
@@ -6,7 +8,7 @@ export type Doctor = {
   specialty: string;
   description: string;
   license: string;
-  /** Archivo en `public/` (servido como `/nombre.ext`). */
+  /** Ruta en `public/` o URL importada desde `assets/`. */
   photoSrc: string;
   /** `object-position` CSS para encuadrar el rostro en el recorte. */
   photoObjectPosition?: string;
@@ -37,8 +39,8 @@ export const DOCTORS: Doctor[] = [
     description:
       "Atención integral y valoración clínica, control de enfermedades crónicas, medicina general y seguimiento preventivo.",
     license: "9876543",
-    photoSrc: "/doctor-gloria-vazquez.png",
-    photoObjectPosition: "center 22%",
+    photoSrc: gloriaVazquezPhoto,
+    photoObjectPosition: "center 20%",
     avatarBg: "linear-gradient(135deg, #b9a08f 0%, #87664f 100%)",
   },
   {

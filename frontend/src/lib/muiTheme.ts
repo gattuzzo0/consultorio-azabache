@@ -13,9 +13,17 @@ export const azabacheTheme = createTheme({
   },
   shape: { borderRadius: 10 },
   typography: {
-    fontFamily: '"Inter", system-ui, sans-serif',
-    h1: { fontWeight: 800, letterSpacing: "-0.025em" },
-    h2: { fontWeight: 800, letterSpacing: "-0.025em" },
+    fontFamily: '"Manrope", system-ui, sans-serif',
+    h1: {
+      fontFamily: '"Bebas Neue", "Arial Narrow", sans-serif',
+      fontWeight: 400,
+      letterSpacing: "0.02em",
+    },
+    h2: {
+      fontFamily: '"Bebas Neue", "Arial Narrow", sans-serif',
+      fontWeight: 400,
+      letterSpacing: "0.02em",
+    },
     h3: { fontWeight: 700, letterSpacing: "-0.02em" },
     h4: { fontWeight: 700, letterSpacing: "-0.02em" },
     h5: { fontWeight: 700, letterSpacing: "-0.015em" },

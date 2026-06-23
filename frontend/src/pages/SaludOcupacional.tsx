@@ -74,7 +74,7 @@ export function SaludOcupacional() {
               <Building2 size={14} aria-hidden />
               Para empresas
             </span>
-            <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            <h1 className="font-display mt-4 text-3xl tracking-tight text-foreground sm:text-4xl">
               {SALUD_OCUPACIONAL_INTRO.title}
             </h1>
             <p className="mt-4 text-base leading-relaxed text-foreground-soft sm:text-lg">
