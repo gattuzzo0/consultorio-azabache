@@ -433,7 +433,7 @@ body {
 /* Sección paquetes promocionales — carrusel */
 .paquetes-section {
   position: relative;
-  scroll-margin-top: 1.5rem;
+  scroll-margin-top: -3.5rem;
 }
 
 .paquetes-section__ambient {
