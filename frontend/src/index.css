@@ -73,6 +73,7 @@ html {
   font-family: var(--font-sans);
   background: var(--background);
   color: var(--foreground);
+  scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -332,6 +333,7 @@ body {
 /* Sección paquetes promocionales — carrusel */
 .paquetes-section {
   position: relative;
+  scroll-margin-top: -3.50rem;
 }
 
 .paquetes-section__ambient {
@@ -382,7 +384,7 @@ body {
 .paquetes-carousel__viewport {
   position: relative;
   min-height: 420px;
-  touch-action: none;
+  touch-action: pan-y;
   outline: none;
 }
 
@@ -453,6 +455,7 @@ body {
 }
 
 .paquetes-carousel__viewport--swiping {
+  touch-action: none;
   cursor: grab;
 }
 
