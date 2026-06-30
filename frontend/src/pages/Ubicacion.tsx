@@ -13,6 +13,7 @@ import {
   ubicacionDirectionsUrl,
 } from "../lib/ubicacion";
 import { HORARIO_LABORAL } from "../lib/horarios";
+import { LAB_WHATSAPP_URL } from "../lib/contactWhatsApp";
 import { openWhatsApp } from "../lib/openWhatsApp";
 
 /** Ancho del encuadre en grados de longitud (bbox). Valores mayores = más alejado. */
@@ -22,7 +23,7 @@ const MAP_BBOX_LAT_SPAN = 0.0036;
 /** Multiplica ambos spans (>1 aleja, <1 acerca el encuadre). */
 const MAP_ZOOM_FACTOR = 1;
 
-const UBICACION_WHATSAPP_HREF = "https://wa.me/5214448593032";
+const UBICACION_WHATSAPP_HREF = LAB_WHATSAPP_URL;
 const MAPS_DIRECTIONS_URL = ubicacionDirectionsUrl();
 
 function buildOsmEmbedSrc(): string {
