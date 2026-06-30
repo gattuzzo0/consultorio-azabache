@@ -5,6 +5,7 @@ import { Wordmark } from "./Logo";
 
 const NAV_LINKS = [
   { to: "/", label: "Inicio", end: true },
+  { to: "/lista-estudios", label: "Estudios" },
   { to: "/salud-ocupacional", label: "Salud ocupacional" },
   { to: "/como-cuidar-tu-salud", label: "Salud preventiva" },
   { to: "/ubicacion", label: "Ubicación" },

@@ -13,6 +13,7 @@ import { SaludOcupacional } from "./pages/SaludOcupacional";
 import { Ubicacion } from "./pages/Ubicacion";
 import { AgendarCita } from "./pages/AgendarCita";
 import { ComosCuidarTuSalud } from "./pages/ComosCuidarTuSalud";
+import { ListaEstudios } from "./pages/ListaEstudios";
 import { NotFound } from "./pages/NotFound";
 
 export default function App() {
@@ -35,6 +36,10 @@ export default function App() {
               <Route
                 path="como-cuidar-tu-salud"
                 element={<ComosCuidarTuSalud />}
+              />
+              <Route
+                path="lista-estudios"
+                element={<ListaEstudios />}
               />
               <Route
                 path="agendar"

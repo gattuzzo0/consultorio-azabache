@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef } from "react";
 import { createPortal } from "react-dom";
+import { Link } from "react-router-dom";
 import { X } from "lucide-react";
 import type { Servicio } from "../lib/servicios";
 import { ServicioIcon } from "./ServicioIcon";
@@ -111,13 +112,20 @@ export function ServicioDetailOverlay({
                 </li>
               ))}
             </ul>
-            {/*
-            <p className="mt-3 text-xs text-muted-foreground">
-              Los precios pueden variar según el estudio solicitado. Consulta
-              disponibilidad al agendar.
-            </p>
-            */}
-       
+            {servicio.priceNote ? (
+              <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+                {servicio.priceNote}
+              </p>
+            ) : null}
+            {servicio.relatedLink ? (
+              <Link
+                to={servicio.relatedLink.to}
+                onClick={onClose}
+                className="mt-3 inline-flex text-sm font-medium text-primary underline-offset-2 hover:underline"
+              >
+                {servicio.relatedLink.label}
+              </Link>
+            ) : null}
           </div>
         </div>
       </article>

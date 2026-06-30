@@ -1,9 +1,10 @@
 import { Wordmark } from "./Logo";
 import { MapPin, MessageCircle } from "lucide-react";
 import { HORARIO_LABORAL } from "../lib/horarios";
+import { LAB_WHATSAPP_URL } from "../lib/contactWhatsApp";
 import { openWhatsApp } from "../lib/openWhatsApp";
 
-const FOOTER_WHATSAPP_HREF = "https://wa.me/5214448593032";
+const FOOTER_WHATSAPP_HREF = LAB_WHATSAPP_URL;
 
 export function Footer() {
   return (

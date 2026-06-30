@@ -23,6 +23,10 @@ export type Servicio = {
   imageSrc: string;
   description: string;
   prices: ServicioPrecio[];
+  /** Texto aclaratorio bajo la tabla de precios. */
+  priceNote?: string;
+  /** Enlace opcional bajo costo estimado (p. ej. catálogo de estudios). */
+  relatedLink?: { to: string; label: string };
 };
 
 export const SERVICIOS: Servicio[] = [
@@ -33,7 +37,18 @@ export const SERVICIOS: Servicio[] = [
     imageSrc: "/servicio-laboratorio.png",
     description:
       "Análisis clínicos de sangre, orina y otros fluidos. Incluye perfiles básicos y estudios especializados según el requerimiento médico u ocupacional.",
-    prices: [{ label: "Perfil básico", range: "$200 – $1,500+" }],
+    prices: [
+      {
+        label: "Según estudio o estudios",
+        range: "$80 – $1,900",
+      },
+    ],
+    priceNote:
+      "Los precios van desde $80 hasta $1,900 pesos, dependiendo del estudio o estudios solicitados.",
+    relatedLink: {
+      to: "/lista-estudios",
+      label: "Lista completa de estudios",
+    },
   },
   {
     id: "antidoping",
